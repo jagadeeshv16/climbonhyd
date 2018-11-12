@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+<form method="POST">
+	{% csrf_token %}
+<table id = 'user'>
+	<tr>
+		<th>firstname</th>
+		<th>email</th>
+		<th>bloodgroup</th>
+		<th>contact</th>
+		<th>photos</th>
+
+	</tr>
+		{%for items in userdata %}
+		<tr>
+		<td>{{items.first_name}}</td>
+		<td>{{items.email}}</td>
+		<td>{{items.bloodgroup}}</td>
+		<td>{{items.contact}}</td>
+		<td>{{items.photos}}</td>
+		{% endfor %}
+		</tr>
+</table>
+</form>
+</body>
+</html>

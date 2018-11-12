@@ -1,0 +1,50 @@
+<title>DATABASE</title>
+	 <style>
+        table {
+             border-collapse: separate;
+         }
+
+        table,
+            th,
+            td {
+                 border: 1px solid black;
+                padding: 5px 5px 5px 5px;
+             }
+    </style>
+</head>
+<body>
+	<h1>WELCOME this is STAFF PAGE</h1>
+	<br>
+	<div class="one">
+    <h1>DATABASE OF USERS</h1>
+	<table>
+    <tr><th>ID</th>
+        <th>email</th>&nbsp;&nbsp;
+        <th>Username</th>
+        <th>STAFF_STATUS</th>&nbsp;&nbsp;
+        <th>ACTIVITY_STATUS</th>
+        <th>ACTIVE USER</th>&nbsp;&nbsp;
+        <th>INACTIVE USER</th>&nbsp;&nbsp;
+        <th>ADD TO STAFF</th>&nbsp;&nbsp;
+        <th>REMOVE FROM STAFF</th>
+    </tr>
+    {% for item in result %}
+    <tr> 
+        <td>{{ item.id }}</td>&nbsp;&nbsp;
+        <td>{{ item.email }}</td>&nbsp;&nbsp;
+        <td>{{item.username}}</td>&nbsp;&nbsp;
+        <td>{{ item.is_staff  }}</td>&nbsp;&nbsp;
+        <td>{{ item.is_active  }}</td>&nbsp;&nbsp;
+        <td><button><a style="color:brown" href="{% url 'staff_active' item.id %}"><b>ACTIVE</b></a></button></td>&nbsp;&nbsp;
+        <td><button><a style="color:brown" href="{% url 'staff_inactive' item.id %}"><b>INACTIVE</b></a></button></td>&nbsp;&nbsp;
+        <td><button><a style="color:brown" href="{% url 'staff_add'  item.id %}"><b>ADD TO STAFF</b></a></button></td>&nbsp;&nbsp;
+        <td><button><a style="color:brown" href="{% url 'staff_remove'  item.id %}"><b>REMOVE FROM STAFF</b></a></button></td>&nbsp;&nbsp;
+    </tr>
+    {% endfor %}
+</table>
+<br>
+</div>
+	<button><a href="{% url 'logout' %}">Log Out</a></button><br>
+	 
+</body>
+</html>
