@@ -49,3 +49,10 @@ class PasswordResetEmailForm(PasswordResetForm):
             raise ValidationError("Error: There is no user registered with the specified email address!")
         return email
 
+class UserEditForm(forms.ModelForm):
+    """Staff Profile Edit Form """
+
+    class Meta:
+        model = User 
+        fields = ["first_name", "last_name", "email", "date_of_birth", "is_active", 
+                    "is_staff", "bloodgroup", "contact", "emergency_contact_no", "photo", "About"]

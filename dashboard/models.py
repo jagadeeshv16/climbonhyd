@@ -5,9 +5,10 @@ from django.contrib.auth.models import BaseUserManager
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 
-fs = FileSystemStorage(location='/home/sravanthi/climbon/media')
+fs = FileSystemStorage(location= settings.BASE_DIR+'/media/photos')
 
 class CustomUserManager(BaseUserManager):
     """ Override createuser and createsuperuser to use email as username
@@ -63,8 +64,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     
     bloodgroup = models.CharField(max_length=30, blank=True)
-    contact = models.IntegerField()
-    emergency_contact_no = models.IntegerField(null=True)
+    contact = models.CharField(max_length=20,null=True, blank=True)
+    emergency_contact_no = models.CharField(max_length=20,null=True, blank=True)
     photo = models.ImageField(null=True, blank=True,storage=fs)
     About = models.CharField(max_length=2000, null=True, blank=True)
 

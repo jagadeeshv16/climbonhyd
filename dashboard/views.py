@@ -12,7 +12,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import CreateView, FormView, UpdateView
+from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, logout, REDIRECT_FIELD_NAME
@@ -25,7 +25,7 @@ from django.contrib.auth.views import (
 from dashboard.models import User
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
-    PasswordResetEmailForm,
+    PasswordResetEmailForm, UserEditForm
 )
 
 
@@ -52,12 +52,17 @@ class RegisterView(CreateView):
         return super(RegisterView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        print(form,123)
+        print(form.cleaned_data.get('contact'),"contact")
         user = User.objects.create_user(
             email=form.cleaned_data.get('email'),
             password=form.cleaned_data.get('password'),
             first_name=form.cleaned_data.get('first_name'),
             last_name=form.cleaned_data.get('last_name'),
-            date_of_birth=form.cleaned_data.get('date_of_birth')
+            date_of_birth=form.cleaned_data.get('date_of_birth'),
+            contact=form.cleaned_data.get('contact'),
+            emergency_contact_no=form.cleaned_data.get('emergency_contact_no'),
+            photo=form.cleaned_data.get('photo'),
         )
         # ToDo: Do not activate user directly. impliment email confirmation by sending emails.
         user.is_active = True
@@ -88,6 +93,7 @@ class LogInView(LoginView):
     success_url = reverse_lazy("dashboard")
 
     def form_valid(self, form):
+        print("hai")
         """Security check complete. Log the user in."""
         login(self.request, form.get_user())
         print('self.get_success_url()', self.get_success_url())
@@ -136,7 +142,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
-        if self.request.is_ajax():
+        if self.redate_of_birth == form.cleaned_data.getquest.is_ajax():
             data = {'error': False, 'success_url': 3(self.get_success_url())}
             return JsonResponse(data)
         return HttpResponseRedirect(self.get_success_url())
@@ -175,45 +181,82 @@ class PasswordResetCompleteView(PasswordResetCompleteView):
 
 
 @staff_member_required
-def staff_inactive(request,id):
-	u = User.objects.get(pk=id)
-	u.is_active=False
-	u.save()
-	result=User.objects.all().exclude(id=request.user.id)
-	return render(request, 'staff1.html',{'result':result})
+def staff_inactive(request, id):
+    u = User.objects.get(pk=id)
+    u.is_active = False
+    u.save()
+    result = User.objects.all().exclude(id=request.user.id)
+    return render(request, 'staff_list.html', {'result':result})
 
 
 @staff_member_required
-def staff_active(request,id):
-	u = User.objects.get(pk=id)
-	u.is_active=True
-	u.save()
-	result=User.objects.all().exclude(id=request.user.id)
-	return render(request, 'staff1.html',{'result':result})
+def staff_active(request, id):
+    u = User.objects.get(pk=id)
+    u.is_active = True
+    u.save()
+    result = User.objects.all().exclude(id=request.user.id)
+    return render(request, 'staff_list.html', {'result':result})
 
 @staff_member_required
 def staff_add(request,id):
-	u = User.objects.get(pk=id)
-	u.is_staff=True
-	u.save()
-	result=User.objects.all().exclude(id=request.user.id)
-	return render(request, 'staff1.html',{'result':result})
+    u = User.objects.get(pk=id)
+    u.is_staff = True
+    u.save()
+    result = User.objects.all().exclude(id=request.user.id)
+    return render(request, 'staff_list.html', {'result':result})
 
 @staff_member_required
 def staff_remove(request,id):
-	u = User.objects.get(pk=id)
-	u.is_staff=False
-	u.save()
-	result=User.objects.all().exclude(id=request.user.id)
-	return render(request, 'staff1.html',{'result':result})
+    u = User.objects.get(pk=id)
+    u.is_staff = False
+    u.save()
+    result = User.objects.all().exclude(id=request.user.id)
+    return render(request, 'staff_list.html', {'result':result})
+
+
+class StaffList(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'staff_list.html'
+    paginate_by = 10
+    paginate_orphans=1
+    context_object_name = 'result'
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 @staff_member_required
-def staff_mem(request):
-	result=User.objects.all().exclude(id=request.user.id)
-	return render(request, 'staff1.html',{'result':result})
+def staff_edit(request, id):
+    data = get_object_or_404(User,id=id)
+    data = User.objects.get(id=id)
+    if request.method == "GET":
+        form = UserEditForm(instance=data)
+        print(form.errors)
+        return render(request,'staffedit.html', {'form':form})
+
+    if request.method == "POST":
+        form = UserEditForm(request.POST, request.FILES, instance=data)
+        if form.is_valid():
+            form.save()
+            result = User.objects.all().exclude(id=request.user.id)
+            return redirect('staff_list')
+        else:
+            return render(request, 'staffedit.html', {'form':form})
+
+    
+    
+class StaffDelete(LoginRequiredMixin, DeleteView):
+    model = User
+    template_name = 'staffdelete.html'
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('staff_list')
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
+class HomePage(TemplateView):
 
-	
-	
-	
+    template_name = "frontend/index.html"
