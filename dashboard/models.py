@@ -5,9 +5,10 @@ from django.contrib.auth.models import BaseUserManager
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+import datetime
 
 
-fs = FileSystemStorage(location='/home/sravanthi/climbon/media')
 
 class CustomUserManager(BaseUserManager):
     """ Override createuser and createsuperuser to use email as username
@@ -63,9 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     
     bloodgroup = models.CharField(max_length=30, blank=True)
-    contact = models.IntegerField()
-    emergency_contact_no = models.IntegerField(null=True)
-    photo = models.ImageField(null=True, blank=True,storage=fs)
+    contact = models.CharField(max_length=20,null=True, blank=True)
+    emergency_contact_no = models.CharField(max_length=20,null=True, blank=True)
+    photo = models.ImageField(null=True,blank=True,upload_to='media/photos/')
     About = models.CharField(max_length=2000, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
@@ -93,3 +94,29 @@ class User(AbstractBaseUser, PermissionsMixin):
         send_mail(subject, message, from_email, [self.email])
 
 # Create your models here.
+
+
+class Image(models.Model):
+
+    title = models.CharField(max_length=20, null=True, blank=True)
+    photos = models.ImageField(blank=True, upload_to='media/photos/')
+    
+
+    def __str__(self):
+        return self.title
+
+    def get_photos(self):
+        return self.photos
+
+
+class ImageAlbum(models.Model):
+
+    name = models.CharField(max_length=20, null=True, blank=True)
+    description = models.CharField(max_length=2000, null=True, blank=True)
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    created_on = models.DateField(_("Date"), default=datetime.date.today)
+    active = models.BooleanField(_('active'), default=False)
+    images = models.ManyToManyField(Image)
+    event_link = models.CharField(max_length=20, null=True, blank=True)
+
+
