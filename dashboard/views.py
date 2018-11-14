@@ -22,10 +22,11 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User
+from dashboard.models import User, Image, ImageAlbum
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
-    PasswordResetEmailForm, UserEditForm
+    PasswordResetEmailForm, UserEditForm,
+    ImageForm, ImageAlbumForm,
 )
 
 
@@ -52,8 +53,7 @@ class RegisterView(CreateView):
         return super(RegisterView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        print(form,123)
-        print(form.cleaned_data.get('contact'),"contact")
+
         user = User.objects.create_user(
             email=form.cleaned_data.get('email'),
             password=form.cleaned_data.get('password'),
@@ -93,10 +93,8 @@ class LogInView(LoginView):
     success_url = reverse_lazy("dashboard")
 
     def form_valid(self, form):
-        print("hai")
         """Security check complete. Log the user in."""
         login(self.request, form.get_user())
-        print('self.get_success_url()', self.get_success_url())
         if self.request.is_ajax():
             return JsonResponse({'error': False, 'success_url': self.get_success_url()})
         return HttpResponseRedirect(self.get_success_url())
@@ -142,7 +140,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
-        if self.redate_of_birth == form.cleaned_data.getquest.is_ajax():
+        if self.redate_of_birth == form.cleaned_data.get(self.request.is_ajax()):
             data = {'error': False, 'success_url': 3(self.get_success_url())}
             return JsonResponse(data)
         return HttpResponseRedirect(self.get_success_url())
@@ -178,8 +176,6 @@ class PasswordResetCompleteView(PasswordResetCompleteView):
     title = 'Password reset complete'
 
 
-
-
 @staff_member_required
 def staff_inactive(request, id):
     u = User.objects.get(pk=id)
@@ -197,6 +193,7 @@ def staff_active(request, id):
     result = User.objects.all().exclude(id=request.user.id)
     return render(request, 'staff_list.html', {'result':result})
 
+
 @staff_member_required
 def staff_add(request,id):
     u = User.objects.get(pk=id)
@@ -204,6 +201,7 @@ def staff_add(request,id):
     u.save()
     result = User.objects.all().exclude(id=request.user.id)
     return render(request, 'staff_list.html', {'result':result})
+
 
 @staff_member_required
 def staff_remove(request,id):
@@ -218,7 +216,7 @@ class StaffList(LoginRequiredMixin, ListView):
     model = User
     template_name = 'staff_list.html'
     paginate_by = 10
-    paginate_orphans=1
+    paginate_orphans = 1
     context_object_name = 'result'
 
     @method_decorator(staff_member_required)
@@ -228,15 +226,14 @@ class StaffList(LoginRequiredMixin, ListView):
 
 @staff_member_required
 def staff_edit(request, id):
-    data = get_object_or_404(User,id=id)
-    data = User.objects.get(id=id)
+    user = get_object_or_404(User,id=id)
+    user = User.objects.get(id=id)
     if request.method == "GET":
-        form = UserEditForm(instance=data)
-        print(form.errors)
+        form = UserEditForm(instance=user)
         return render(request,'staffedit.html', {'form':form})
 
     if request.method == "POST":
-        form = UserEditForm(request.POST, request.FILES, instance=data)
+        form = UserEditForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             result = User.objects.all().exclude(id=request.user.id)
@@ -244,19 +241,27 @@ def staff_edit(request, id):
         else:
             return render(request, 'staffedit.html', {'form':form})
 
-    
-    
+
 class StaffDelete(LoginRequiredMixin, DeleteView):
     model = User
-    template_name = 'staffdelete.html'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('staff_list')
+    template_name = 'staffdelete.html'
 
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+        return super(StaffDelete,self).dispatch(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk=kwargs['pk'])
+        return render(request, 'staffdelete.html',{'user':user})
+
+
 
 
 class HomePage(TemplateView):
-
     template_name = "frontend/index.html"
+
+
+
+

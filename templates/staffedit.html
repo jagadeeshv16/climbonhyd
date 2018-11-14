@@ -82,7 +82,8 @@
             <label class="control-label col-sm-2"  for="photo">Photo*</label>
             <div class="col-sm-1">
                 <input type="file" name="{{form.photo.html_name}}" id="{{ form.photo.auto_id }}" 
-                accept="image/*" placeholder="" value="{{form.photo.url}}" class="form-control">
+                accept="image/*" placeholder="" class="form-control">
+                <img src="{{ form.instance.photo.url}}" width="100" height="100">
             </div>
         </div>
 

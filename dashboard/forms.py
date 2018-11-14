@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordResetForm, AuthenticationForm
 
-from dashboard.models import User
+from dashboard.models import User, Image, ImageAlbum
 
 
 class RegisterForm(forms.ModelForm):
@@ -56,3 +56,16 @@ class UserEditForm(forms.ModelForm):
         model = User 
         fields = ["first_name", "last_name", "email", "date_of_birth", "is_active", 
                     "is_staff", "bloodgroup", "contact", "emergency_contact_no", "photo", "About"]
+
+
+class ImageForm(forms.ModelForm):
+
+    class Meta:
+        model = Image
+        fields = ["title", "photos"]
+
+class ImageAlbumForm(forms.ModelForm):
+
+    class Meta:
+        model = ImageAlbum
+        fields = ["name", "description", "created_by", "created_on", "active", "images", "event_link"]

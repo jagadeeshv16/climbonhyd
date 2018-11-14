@@ -22,7 +22,6 @@ urlpatterns = [
     path("staffadd/<int:id>/", views.staff_add,name="staff_add"),
     path("staffremove/<int:id>/", views.staff_remove,name="staff_remove"),
     path("staffedit/<int:id>/", views.staff_edit,name="staff_edit"),
-    path("staffdelete/<int:pk>", views.StaffDelete.as_view(), name="staffdelete")
-
+    path("staffdelete/<int:pk>/", views.StaffDelete.as_view(), name="staffdelete"),
 
 ]
