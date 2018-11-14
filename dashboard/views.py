@@ -22,11 +22,11 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User, Image, ImageAlbum
+from dashboard.models import User, Image, ImageAlbum, SiteContent
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
     PasswordResetEmailForm, UserEditForm,
-    ImageForm, ImageAlbumForm,
+    ImageForm, ImageAlbumForm, SiteContentForm
 )
 
 
@@ -264,4 +264,53 @@ class HomePage(TemplateView):
 
 
 
+class SiteContentView(LoginRequiredMixin, CreateView):
+    model = SiteContent
+    template_name = 'sitecontent_create.html'
+    form_class = SiteContentForm
 
+    def form_invalid(self, form):
+        print(form.errors)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        site_content = form.save(commit=False)
+        site_content.created_by = self.request.user
+        site_content.index = SiteContent.objects.count()
+        site_content.save()
+        return redirect('sitecontent_list')
+
+
+class SiteContentList(LoginRequiredMixin, ListView):
+    model = SiteContent
+    template_name = 'sitecontent_list.html'
+    success_url = reverse_lazy('dashboard')
+    paginate_by = 10
+    paginate_orphans=1
+    context_object_name = 'sitelist'
+
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
+
+
+class SiteContentUpdate(LoginRequiredMixin, UpdateView):
+    model = SiteContent
+    template_name = 'sitecontent_create.html'
+    form_class = SiteContentForm
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('sitecontent_list')
+
+
+class SiteContentDelete(LoginRequiredMixin, DeleteView):
+    model = SiteContent
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('sitecontent_list')
+
+    def dispatch(self, *args, **kwargs):
+        return super(SiteContentDelete,self).dispatch(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        user = SiteContent.objects.get(pk=kwargs['pk'])
+        user = user.name
+        return render(request, 'staffdelete.html',{'user':user})

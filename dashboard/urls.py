@@ -23,5 +23,10 @@ urlpatterns = [
     path("staffremove/<int:id>/", views.staff_remove,name="staff_remove"),
     path("staffedit/<int:id>/", views.staff_edit,name="staff_edit"),
     path("staffdelete/<int:pk>/", views.StaffDelete.as_view(), name="staffdelete"),
+    path('sitecontent/', views.SiteContentView.as_view(), name="sitecontent"),
+    path('contentlist/',views.SiteContentList.as_view(), name='sitecontent_list'),
+    path('sitecontentupdate/<int:pk>/', views.SiteContentUpdate.as_view(), name="sitecontent_update"),
+    path('sitecontentdelete/<int:pk>/', views.SiteContentDelete.as_view(), name="sitecontent_delete")
+
 
 ]
