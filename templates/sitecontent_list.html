@@ -6,13 +6,16 @@
     <legend class="">DATABASE OF SiteContent
     <button><a href="{% url 'sitecontent' %}">AddItem</a></button></legend>
 	<table class="table table-striped">
-    <tr><th>name</th>
+    <tr>
+    	<th>name</th>
         <th>contact</th>
         <th>created_on</th>
         <th>created_by</th>
         <th>active</th>
         <th>index</th>
         <th>link</th>
+        <th>up</th>
+        <th>down</th>
         <th>edit</th>
         <th>delete</th>
     </tr>
@@ -25,8 +28,10 @@
         <td>{{ item.active  }}</td>
         <td>{{ item.index  }}</td>
         <td>{{ item.link }}</td>
-        <td><button><a  href="{% url 'sitecontent_update'  item.id %}"><b>EDIT</b></a></button></td>
-        <td><button><a  href="{% url 'sitecontent_delete' item.id %}"><b>DELETE</b></a></button></td>
+        <td><button><a href="{% url 'up' item.id %}"><i class="fas fa-arrow-circle-up"></i></a></button></td>
+        <td><button><a href="{% url 'down' item.id %}"><i class="fas fa-arrow-circle-down"></i></a></button></td>
+        <td><button><a  href="{% url 'sitecontent_update'  item.id %}"><b><i class="fas fa-edit"></i></b></a></button></td>
+        <td><button><a  href="{% url 'sitecontent_delete' item.id %}"><b><i class="fas fa-trash"></i></b></a></button></td>
     </tr>
     {% endfor %}
 </table>
@@ -49,3 +54,4 @@
     {% endif %}
 </center>
 {% endblock %}
+

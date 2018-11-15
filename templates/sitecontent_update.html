@@ -10,16 +10,16 @@
         <div class="form-group">
             <label class="control-label col-sm-4" for="name">Name</label>
             <div class="col-sm-4">
-                <input type="text" name="{{form.name.html_name}}" id="{{ form.name.auto_id }}" placeholder="Name" class="form-control">
-                <p>{{form.name.errors}}</p>
+                <input type="text" name="{{form.name.html_name}}" id="{{ form.name.auto_id }}" placeholder="" value="{{form.name.value}}" class="form-control">
+                {{form.name.errors}}
             </div>
         </div>
         <br><br>
         <div class="form-group">
             <label class="control-label col-sm-4" for="content">Content</label>
             <div class="col-sm-4">
-                <textarea type="content" name="{{form.content.html_name}}" id="{{ form.content.auto_id }}" placeholder="text here...." class="form-control"></textarea>
-                <p>{{form.content.errors}}</p>
+                <textarea type="content" name="{{form.content.html_name}}" id="{{ form.content.auto_id }}" placeholder="" class="form-control">{{form.content.value}}</textarea>
+                {{form.content.errors}}
             </div>
         </div><br><br>
         <div class="form-group">
@@ -33,7 +33,7 @@
         <div class="form-group">
             <label class="control-label col-sm-3"  for="link">Link</label>
             <div class="col-sm-2">
-                <input type="text" name="{{form.link.html_name}}" id="{{ form.link.auto_id }}" placeholder="link" class="form-control">
+                <input type="text" name="{{form.link.html_name}}" id="{{ form.link.auto_id }}" placeholder="" value="{{form.link.value}}" class="form-control">
                 {{form.link.errors}}
             </div>
         <br><br><br>

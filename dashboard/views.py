@@ -29,6 +29,9 @@ from dashboard.forms import (
     ImageForm, ImageAlbumForm, SiteContentForm
 )
 
+up_value = -1
+down_value = -1
+last_value=[]
 
 class Home(TemplateView):
     """To display landing(home) page for website
@@ -270,14 +273,17 @@ class SiteContentView(LoginRequiredMixin, CreateView):
     form_class = SiteContentForm
 
     def form_invalid(self, form):
-        print(form.errors)
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
         site_content = form.save(commit=False)
         site_content.created_by = self.request.user
         site_content.index = SiteContent.objects.count()
-        site_content.save()
+        if site_content.index == SiteContent.objects.count():
+            site_content.index=site_content.index+1
+            site_content.save()
+        else:
+            site_content.save()
         return redirect('sitecontent_list')
 
 
@@ -287,16 +293,17 @@ class SiteContentList(LoginRequiredMixin, ListView):
     success_url = reverse_lazy('dashboard')
     paginate_by = 10
     paginate_orphans=1
+    queryset = SiteContent.objects.order_by('index')
     context_object_name = 'sitelist'
 
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-    
+
+    def get_ordering(self):
+        return self.ordering
 
 
 class SiteContentUpdate(LoginRequiredMixin, UpdateView):
     model = SiteContent
-    template_name = 'sitecontent_create.html'
+    template_name = 'sitecontent_update.html'
     form_class = SiteContentForm
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('sitecontent_list')
@@ -314,3 +321,41 @@ class SiteContentDelete(LoginRequiredMixin, DeleteView):
         user = SiteContent.objects.get(pk=kwargs['pk'])
         user = user.name
         return render(request, 'staffdelete.html',{'user':user})
+
+
+def up(request,id):
+    if request.method == "GET":
+        all_obj = list(SiteContent.objects.all().values_list('index', flat=True))
+        count=SiteContent.objects.count()
+        content_id = SiteContent.objects.get(id=id)
+        if content_id.index == min(all_obj):
+            pass
+        else:
+            content_index = SiteContent.objects.get(index=content_id.index-1)
+            content_id.index = content_id.index-1
+            content_index.index = content_index.index+1
+            content_id.save()
+            content_index.save()
+    return redirect('sitecontent_list')
+
+
+def down(request,id):
+    if request.method == "GET":
+        all_obj = list(SiteContent.objects.all().values_list('index', flat=True))
+        content_id = SiteContent.objects.get(id=id)
+        count=SiteContent.objects.count()
+        if content_id.index == max(all_obj):
+            pass
+        else:
+            content_index = SiteContent.objects.get(index=content_id.index+1)
+            content_id.index = content_id.index+1
+            content_index.index = content_index.index-1
+            content_id.save()
+            content_index.save()
+    return redirect('sitecontent_list')
+    
+
+
+
+
+
