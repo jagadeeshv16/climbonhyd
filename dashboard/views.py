@@ -29,9 +29,6 @@ from dashboard.forms import (
     ImageForm, ImageAlbumForm, SiteContentForm
 )
 
-up_value = -1
-down_value = -1
-last_value=[]
 
 class Home(TemplateView):
     """To display landing(home) page for website
@@ -267,7 +264,7 @@ class HomePage(TemplateView):
 
 
 
-class SiteContentView(LoginRequiredMixin, CreateView):
+class SiteContentCreateView(LoginRequiredMixin, CreateView):
     model = SiteContent
     template_name = 'sitecontent_create.html'
     form_class = SiteContentForm
@@ -278,11 +275,11 @@ class SiteContentView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         site_content = form.save(commit=False)
         site_content.created_by = self.request.user
+        all_obj = list(SiteContent.objects.all().values_list('index', flat=True))
+        index = max(all_obj)
         site_content.index = SiteContent.objects.count()
         if site_content.index == SiteContent.objects.count():
-            site_content.index=site_content.index+1
-            site_content.save()
-        else:
+            site_content.index=index+1
             site_content.save()
         return redirect('sitecontent_list')
 
@@ -318,11 +315,11 @@ class SiteContentDelete(LoginRequiredMixin, DeleteView):
         return super(SiteContentDelete,self).dispatch(*args, **kwargs)
     
     def get(self, request, *args, **kwargs):
-        user = SiteContent.objects.get(pk=kwargs['pk'])
-        user = user.name
-        return render(request, 'staffdelete.html',{'user':user})
+        site_name = SiteContent.objects.get(pk=kwargs['pk'])
+        site_name = site_name.name
+        return render(request, 'staffdelete.html',{'user':site_name})
 
-
+        
 def up(request,id):
     if request.method == "GET":
         all_obj = list(SiteContent.objects.all().values_list('index', flat=True))
@@ -355,16 +352,12 @@ def down(request,id):
     return redirect('sitecontent_list')
     
 
-class HomePage(ListView):
-    model = SiteContent
+class HomePage(TemplateView):
     template_name = 'frontend/index.html'
-    paginate_by = 10
-    paginate_orphans=1
+    
 
     def get_context_data(self, **kwargs):
         data = super(HomePage,self).get_context_data(**kwargs)
         data['sitelist'] = SiteContent.objects.filter(active=True).order_by('index')
         return data
 
-class SiteContentActiveList(TemplateView):
-    template_name = 'frontend/index.html'
