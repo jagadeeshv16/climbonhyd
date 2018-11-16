@@ -17,7 +17,7 @@
         <br><br>
         <div class="form-group">
             <label class="control-label col-sm-4" for="content">Content</label>
-            <div class="col-sm-4">
+            <div class="col-sm-9 col-md-6 col-lg-8">
                 <textarea type="content" name="{{form.content.html_name}}" id="{{ form.content.auto_id }}" placeholder="text here...." class="form-control"></textarea>
                 <p>{{form.content.errors}}</p>
             </div>
@@ -45,3 +45,19 @@
     </form>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+  CKEDITOR.replace('{{form.content.html_name}}',
+    {
+    filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
+    filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?type=Images',
+    filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?type=Flash',
+    filebrowserUploadUrl : 
+       '/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Files&currentFolder=/static/media/',
+    filebrowserImageUploadUrl : 
+       '/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Images&currentFolder=/static/media/photos/',
+    filebrowserFlashUploadUrl : '/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Flash'
+   });
+</script>
+{% endblock extra_js %}

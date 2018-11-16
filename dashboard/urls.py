@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
 from django.urls import path, include
+from django.views.static import serve
+from django.conf import settings
 
 
 urlpatterns = [
@@ -28,7 +30,15 @@ urlpatterns = [
     path('sitecontentupdate/<int:pk>/', views.SiteContentUpdate.as_view(), name="sitecontent_update"),
     path('sitecontentdelete/<int:pk>/', views.SiteContentDelete.as_view(), name="sitecontent_delete"),
     path('up/<int:id>/', views.up, name="up"),
-    path('down/<int:id>/', views.down, name="down")
+    path('down/<int:id>/', views.down, name="down"),
+    path('siteactivelist/',views.SiteContentActiveList.as_view(), name="siteactivelist")
 
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT
+        }),
+    ]

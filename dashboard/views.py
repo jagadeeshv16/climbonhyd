@@ -355,7 +355,16 @@ def down(request,id):
     return redirect('sitecontent_list')
     
 
+class HomePage(ListView):
+    model = SiteContent
+    template_name = 'frontend/index.html'
+    paginate_by = 10
+    paginate_orphans=1
 
+    def get_context_data(self, **kwargs):
+        data = super(HomePage,self).get_context_data(**kwargs)
+        data['sitelist'] = SiteContent.objects.filter(active=True).order_by('index')
+        return data
 
-
-
+class SiteContentActiveList(TemplateView):
+    template_name = 'frontend/index.html'
