@@ -275,11 +275,9 @@ class SiteContentCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         site_content = form.save(commit=False)
         site_content.created_by = self.request.user
-        all_obj = list(SiteContent.objects.all().values_list('index', flat=True))
-        index = max(all_obj)
         site_content.index = SiteContent.objects.count()
         if site_content.index == SiteContent.objects.count():
-            site_content.index=index+1
+            site_content.index=site_content.index+1
             site_content.save()
         return redirect('sitecontent_list')
 
@@ -318,6 +316,15 @@ class SiteContentDelete(LoginRequiredMixin, DeleteView):
         site_name = SiteContent.objects.get(pk=kwargs['pk'])
         site_name = site_name.name
         return render(request, 'staffdelete.html',{'user':site_name})
+
+    def post(self, request, *args, **kwargs):
+        index = SiteContent.objects.all()
+        index_present = SiteContent.objects.get(pk=kwargs['pk'])
+        for i in index:
+            if i.index > index_present.index:
+                i.index = i.index-1
+                i.save()
+        return self.delete(request, *args, **kwargs)
 
         
 def up(request,id):
