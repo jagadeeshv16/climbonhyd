@@ -173,8 +173,7 @@ section h2 {
 }
 
 header.masthead {
-  padding-top: calc(6rem + 72px);
-  padding-bottom: 6rem;
+  padding-bottom: 1%;
 }
 
 header.masthead h1 {
@@ -189,8 +188,7 @@ header.masthead h2 {
 
 @media (min-width: 992px) {
   header.masthead {
-    padding-top: calc(6rem + 106px);
-    padding-bottom: 6rem;
+    padding-bottom: 1%;
   }
   header.masthead h1 {
     font-size: 4.75em;

@@ -22,11 +22,11 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User, Image, ImageAlbum
+from dashboard.models import User, Image, ImageAlbum, SiteContent
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
     PasswordResetEmailForm, UserEditForm,
-    ImageForm, ImageAlbumForm,
+    ImageForm, ImageAlbumForm, SiteContentForm
 )
 
 
@@ -264,4 +264,107 @@ class HomePage(TemplateView):
 
 
 
+class SiteContentCreateView(LoginRequiredMixin, CreateView):
+    model = SiteContent
+    template_name = 'sitecontent_create.html'
+    form_class = SiteContentForm
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        site_content = form.save(commit=False)
+        site_content.created_by = self.request.user
+        site_content.index = SiteContent.objects.count()
+        if site_content.index == SiteContent.objects.count():
+            site_content.index=site_content.index+1
+            site_content.save()
+        return redirect('sitecontent_list')
+
+
+class SiteContentList(LoginRequiredMixin, ListView):
+    model = SiteContent
+    template_name = 'sitecontent_list.html'
+    success_url = reverse_lazy('dashboard')
+    paginate_by = 10
+    paginate_orphans=1
+    queryset = SiteContent.objects.order_by('index')
+    context_object_name = 'sitelist'
+
+
+    def get_ordering(self):
+        return self.ordering
+
+
+class SiteContentUpdate(LoginRequiredMixin, UpdateView):
+    model = SiteContent
+    template_name = 'sitecontent_update.html'
+    form_class = SiteContentForm
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('sitecontent_list')
+
+
+class SiteContentDelete(LoginRequiredMixin, DeleteView):
+    model = SiteContent
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('sitecontent_list')
+
+    def dispatch(self, *args, **kwargs):
+        return super(SiteContentDelete,self).dispatch(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        site_name = SiteContent.objects.get(pk=kwargs['pk'])
+        site_name = site_name.name
+        return render(request, 'staffdelete.html',{'user':site_name})
+
+    def post(self, request, *args, **kwargs):
+        index = SiteContent.objects.all()
+        index_present = SiteContent.objects.get(pk=kwargs['pk'])
+        for i in index:
+            if i.index > index_present.index:
+                i.index = i.index-1
+                i.save()
+        return self.delete(request, *args, **kwargs)
+
+        
+def up(request,id):
+    if request.method == "GET":
+        all_obj = list(SiteContent.objects.all().values_list('index', flat=True))
+        count=SiteContent.objects.count()
+        content_id = SiteContent.objects.get(id=id)
+        if content_id.index == min(all_obj):
+            pass
+        else:
+            content_index = SiteContent.objects.get(index=content_id.index-1)
+            content_id.index = content_id.index-1
+            content_index.index = content_index.index+1
+            content_id.save()
+            content_index.save()
+    return redirect('sitecontent_list')
+
+
+def down(request,id):
+    if request.method == "GET":
+        all_obj = list(SiteContent.objects.all().values_list('index', flat=True))
+        content_id = SiteContent.objects.get(id=id)
+        count=SiteContent.objects.count()
+        if content_id.index == max(all_obj):
+            pass
+        else:
+            content_index = SiteContent.objects.get(index=content_id.index+1)
+            content_id.index = content_id.index+1
+            content_index.index = content_index.index-1
+            content_id.save()
+            content_index.save()
+    return redirect('sitecontent_list')
+    
+
+class HomePage(TemplateView):
+    template_name = 'frontend/index.html'
+    
+
+    def get_context_data(self, **kwargs):
+        data = super(HomePage,self).get_context_data(**kwargs)
+        data['sitelist'] = SiteContent.objects.filter(active=True).order_by('index')
+        return data
 

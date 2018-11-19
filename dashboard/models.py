@@ -120,3 +120,12 @@ class ImageAlbum(models.Model):
     event_link = models.CharField(max_length=20, null=True, blank=True)
 
 
+class SiteContent(models.Model):
+    name = models.CharField(max_length=255)
+    content = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    active = models.BooleanField(_('active'), default=False)
+    index = models.IntegerField()
+    link = models.CharField(max_length=20, null=True, blank=True)
+

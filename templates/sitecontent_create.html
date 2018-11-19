@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-16">
+<form class="form-inline" action='' id="register" method="POST">
+    <fieldset>
+        <div id="legend">
+        <legend class="">Create New Account</legend>
+        </div>
+         
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="name">Name</label>
+            <div class="col-sm-4">
+                <input type="text" name="{{form.name.html_name}}" id="{{ form.name.auto_id }}" placeholder="Name" class="form-control">
+                <p>{{form.name.errors}}</p>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="content">Content</label>
+            <div class="col-sm-9 col-md-6 col-lg-8">
+                <textarea type="content" name="{{form.content.html_name}}" id="{{ form.content.auto_id }}" placeholder="text here...." class="form-control"></textarea>
+                <p>{{form.content.errors}}</p>
+            </div>
+        </div><br><br>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="active">Active</label>
+            <div class="col-sm-4">
+                {{form.active}}
+                {{form.active.errors}}
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label class="control-label col-sm-3"  for="link">Link</label>
+            <div class="col-sm-2">
+                <input type="text" name="{{form.link.html_name}}" id="{{ form.link.auto_id }}" placeholder="link" class="form-control">
+                {{form.link.errors}}
+            </div>
+        <br><br><br>
+        {% csrf_token %}
+        <div class="form-group col-sm-4 text-center">
+            <button class="btn btn-success" type="submit">submit</button>
+        </div>
+    </fieldset>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  CKEDITOR.replace('{{form.content.html_name}}',
+    {
+    filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
+    filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?type=Images',
+    filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?type=Flash',
+    filebrowserUploadUrl : 
+       '/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Files&currentFolder=/static/media/',
+    filebrowserImageUploadUrl : 
+       '/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Images&currentFolder=/static/media/photos/',
+    filebrowserFlashUploadUrl : '/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Flash'
+   });
+</script>
+{% endblock extra_js %}

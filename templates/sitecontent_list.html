@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-16">
+
+<title>DATABASE</title>
+    <legend class="">DATABASE OF SiteContent
+    <button><a href="{% url 'sitecontent' %}">AddItem</a></button></legend>
+	<table class="table table-striped">
+    <tr>
+    	<th>name</th>
+        <th>created_on</th>
+        <th>created_by</th>
+        <th>index</th>
+        <th>active</th>
+        <th>up</th>
+        <th>down</th>
+        <th>edit</th>
+        <th>delete</th>
+    </tr>
+    {% for item in sitelist %}
+    <tr> 
+        <td>{{ item.name }}</td>
+        <td>{{item.created_on}}</td>
+        <td>{{item.created_by}}</td>
+        <td>{{item.index}}</td>
+        <td>{{ item.active  }}</td>
+        <td><button><a href="{% url 'up' item.id %}"><i class="fas fa-arrow-circle-up"></i></a></button></td>
+        <td><button><a href="{% url 'down' item.id %}"><i class="fas fa-arrow-circle-down"></i></a></button></td>
+        <td><button><a  href="{% url 'sitecontent_update'  item.id %}"><b><i class="fas fa-edit"></i></b></a></button></td>
+        <td><button><a  href="{% url 'sitecontent_delete' item.id %}"><b><i class="fas fa-trash"></i></b></a></button></td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+<center>
+{% if is_paginated %}
+      <div class="pagination">
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+              <span class="page-current">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+              {% endif %}
+          </span>
+      </div>
+    {% endif %}
+</center>
+{% endblock %}
+
