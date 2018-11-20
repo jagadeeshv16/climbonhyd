@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'template')
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'dashboard.apps.DashboardConfig',
 ]
 
@@ -135,6 +138,24 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_IMPORTS = ('dashboard.tasks', )
+
+CELERY_BEAT_SCHEDULE = {
+    'event-data': { 
+         'task':'dashboard.tasks.event_data', 
+         'schedule': crontab(minute=0, hour=6),
+        },                 
+
+}
+
+
 AUTH_USER_MODEL = 'dashboard.User'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGIN_URL = 'login'
@@ -151,3 +172,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'jagadeesh@micropyramid.com'
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+GROUP_NAME = 'Theclimbon'
+API_KEY = '3c4a59665d1e1952751846252a47393c'
