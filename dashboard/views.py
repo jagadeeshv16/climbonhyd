@@ -471,3 +471,24 @@ class Past_Eventdata(CreateView):
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 
+
+
+
+class EventDataList(ListView):
+    model = EventData
+    template_name = 'events_list.html'
+    success_url = reverse_lazy('dashboard')
+    paginate_by = 10
+    context_object_name = 'eventsdata'
+
+    def get_queryset(self):
+        events = EventData.objects.all()
+        if self.request.GET.get('status') == "past":
+            return events.filter(status='past')
+        else:
+            return events.filter(status='upcoming')
+
+    def get_context_data(self, **kwargs):
+        data = super(EventDataList,self).get_context_data(**kwargs)
+        data['status'] = self.request.GET.get('status')
+        return data

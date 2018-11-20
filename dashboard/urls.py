@@ -32,7 +32,8 @@ urlpatterns = [
     path('up/<int:id>/', views.up, name="up"),
     path('down/<int:id>/', views.down, name="down"),
     path('eventdata/',views.Upcoming_Eventdata.as_view(), name='eventdata'),
-    path('pastevents/',views.Past_Eventdata.as_view(), name='pastevents')
+    path('pasteventsdata/',views.Past_Eventdata.as_view(), name='pastevents'),
+    path('events/', views.EventDataList.as_view(), name='eventslist'),
 
 
 ]

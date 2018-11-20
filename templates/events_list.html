@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container">     
+    <div class="row">
+      <div class="col-sm-9 bg-info">
+        <a href="{% url  'eventslist' %}?status=upcoming"><h4>UPCOMING</h4></a>
+        <a href="{% url 'eventslist' %}?status=past"><h4>PAST</h4></a>
+      </div>
+      {% for item in eventsdata %}
+      <div class="col-sm-9 text-white-50 bg-dark">
+        <h3>{{item.name}}<h3>
+          <h4 class="col-sm-3 bg-danger">{{item.event_datetime}}<br>{{item.status}}</h4>
+        <div><h5 class="col-sm-9 bg-dark">{{item.description|truncatewords:50|safe}}</h5>
+        <a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+<center>
+{% if is_paginated %}
+      <div class="pagination">
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?status={{status}}&page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+              <span class="page-current">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?status={{status}}&page={{ page_obj.next_page_number }}">next</a>
+              {% endif %}
+          </span>
+      </div>
+    {% endif %}
+</center>
+{% endblock %}
+
