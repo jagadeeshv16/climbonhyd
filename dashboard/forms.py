@@ -83,5 +83,6 @@ class EventDataForm(forms.ModelForm):
     class Meta:
         model = EventData
         fields = ["created", "name", "created_id", "event_datetime", "status", "updated", "venue_name",
-                 "venue_address", "venue_city", "venue_country", "link", "Contact_Us", "updated_date"]
+                 "venue_address", "venue_city", "venue_country", "link", "Contact_Us", "description",
+                 ]
 

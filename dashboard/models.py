@@ -129,6 +129,7 @@ class SiteContent(models.Model):
     index = models.IntegerField()
     link = models.CharField(max_length=20, null=True, blank=True)
 
+
 class EventData(models.Model):
     active = models.BooleanField(_('active'), default=False) 
     created =models.CharField(max_length=25)
@@ -144,7 +145,8 @@ class EventData(models.Model):
     venue_country = models.CharField(max_length=255, null=True, blank=True)
     link = models.CharField(max_length=55)
     Contact_Us = models.CharField(max_length=1000,null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
-    # def __str__(self):
-    #     return self.created_id 
+    def __str__(self):
+        return self.created_id 
 

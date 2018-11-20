@@ -1,7 +1,6 @@
 
 import requests
 import json
-# from datetime import datetime
 import time
 import datetime
 
@@ -14,6 +13,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.views import View
 from django.shortcuts import resolve_url
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
@@ -396,28 +396,32 @@ class Upcoming_Eventdata(CreateView):
                 up_date = int(str(up_date)[:10])
                 up_date = time.strftime("%Y-%m-%d %H:%M", time.localtime(up_date))
                 up_date_date = datetime.datetime.strptime(up_date, '%Y-%m-%d %H:%M')
-                if EventData.objects.filter(created_id=context['id']).exists() or EventData.objects.filter(updated_date=up_date_date).exists():
-                    message = "the data is already saved"
+                if EventData.objects.filter(created_id=context['id']).exists():
+                    ev_obj = EventData.objects.filter(created_id=context['id']).first()
+                    if not ev_obj.updated_date.replace(tzinfo=timezone.utc)< up_date_date.replace(tzinfo=timezone.utc):
+                        continue
                 else:
-                    date_feild = context.get('local_date')
-                    date_feild = datetime.datetime.strptime(date_feild, "%Y-%m-%d")
-                    time_feild = context.get('local_time')
-                    time_feild = datetime.datetime.strptime(time_feild, '%H:%M').time()
-                    event = EventData.objects.update_or_create(
-                       created=context.get('created'),
-                       name=context.get('name'),
-                       created_id=context.get('id'),
-                       event_datetime=datetime.datetime.combine(date_feild,time_feild),
-                       status = context.get('status'),
-                       updated=context.get('updated'),
-                       updated_date=up_date,
-                       venue_name=context.get('venue', {}).get('name', ""),
-                       venue_address=context.get('venue', {}).get('address_1',""),
-                       venue_city=context.get('venue', {}).get('city',""),
-                       venue_country=context.get('venue', {}).get('country',""),
-                       link=context.get('link'),
-                       Contact_Us=context.get('how_to_find_us'))
-                    message="data created sucessfully"
+                    ev_obj = EventData()
+                date_feild = context.get('local_date')
+                date_feild = datetime.datetime.strptime(date_feild, "%Y-%m-%d")
+                time_feild = context.get('local_time')
+                time_feild = datetime.datetime.strptime(time_feild, '%H:%M').time()
+                ev_obj.created = context.get('created')
+                ev_obj.name = context.get('name')
+                ev_obj.created_id=context.get('id')
+                ev_obj.event_datetime=datetime.datetime.combine(date_feild,time_feild)
+                ev_obj.status = context.get('status')
+                ev_obj.updated=context.get('updated')
+                ev_obj.updated_date=up_date
+                ev_obj.venue_name=context.get('venue', {}).get('name', "")
+                ev_obj.venue_address=context.get('venue', {}).get('address_1',"")
+                ev_obj.venue_city=context.get('venue', {}).get('city',"")
+                ev_obj.venue_country=context.get('venue', {}).get('country',"")
+                ev_obj.link=context.get('link')
+                ev_obj.Contact_Us=context.get('how_to_find_us')
+                ev_obj.description = context.get('description')
+                ev_obj.save()
+            message="data created sucessfully"
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 
@@ -436,26 +440,24 @@ class Past_Eventdata(CreateView):
         url = 'https://api.meetup.com/'+groupname+'/events?&sign=true&photo-host=public&status=past&key='+key
         context = requests.get(url)
         if context.status_code == 200:
-            events= context.json()
+            events = context.json()
             for context in events:
-                print(context['id'])
                 if EventData.objects.filter(created_id=context['id']).exists():
                     message = "the data is already saved"
                 else:
                     date_feild = context.get('local_date')
-                    date_feild=datetime.datetime.strptime(date_feild, "%Y-%m-%d")
+                    date_feild = datetime.datetime.strptime(date_feild, "%Y-%m-%d")
                     time_feild = context.get('local_time')
                     time_feild = datetime.datetime.strptime(time_feild, '%H:%M').time()
                     up_date = context.get('updated')
                     up_date = int(str(up_date)[:10])
                     up_date = time.strftime("%Y-%m-%d %H:%M", time.localtime(up_date))
-                    print(409,up_date)
                     event = EventData.objects.create(
                        created=context.get('created'),
                        name=context.get('name'),
                        created_id=context.get('id'),
                        event_datetime=datetime.datetime.combine(date_feild,time_feild),
-                       status = context.get('status'),
+                       status=context.get('status'),
                        updated=context.get('updated'),
                        updated_date=up_date,
                        venue_name=context.get('venue', {}).get('name', ""),
@@ -463,8 +465,9 @@ class Past_Eventdata(CreateView):
                        venue_city=context.get('venue', {}).get('city',""),
                        venue_country=context.get('venue', {}).get('country',""),
                        link=context.get('link'),
-                       Contact_Us=context.get('how_to_find_us'))
-                    message="data created sucessfully"
+                       Contact_Us=context.get('how_to_find_us'),
+                       description=context.get('description'))
+                    message = "data created sucessfully"
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 

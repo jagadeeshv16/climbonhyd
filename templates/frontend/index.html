@@ -7,10 +7,12 @@
 <!-- Portfolio Grid Section -->
 <section class="{%cycle "bg-primary text-white mb-0" "about"%}">
   <div class="container">
-    <h2 class="text-center text-uppercase mb-0">{{ item.name }}</h2>
-    <hr class="star-light mb-5">
+    <h2 class="text-center text-uppercase mb-0" id="{{item.name}}">{{ item.name }}</h2>
+    <hr class="{%cycle "star-light mb-5" "star-dark mb-5"%}">
       <div style="display: inline">{{item.content|safe}}&nbsp;&nbsp;</div>
       </div>
 </section>
 {% endfor %}
 {% endblock content %}
+
+
