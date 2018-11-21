@@ -29,12 +29,12 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
     PasswordResetEmailForm, UserEditForm,
     ImageForm, ImageAlbumForm, SiteContentForm,
-    EventDataForm
+    EventDataForm, EventPhotoForm
 )
 
 
@@ -504,6 +504,53 @@ class EventDataList(ListView):
                 return render(request,'events_list.html',{'eventsdata':eventsdata,'error':error})
         else:
             error = "please enter event name to search"
-            
+
         return render(request,'events_list.html',{'error':error})
+
+
+class EventPhotoData(CreateView):
+    model = EventPhoto
+    form_class = EventPhotoForm
+    template_name = 'eventdata.html'
+    success_url = reverse_lazy('sitecontent_list')
+
+
+
+    def get(self, request, *args, **kwargs):
+        groupname = settings.GROUP_NAME
+        key = settings.API_KEY
+        url = 'https://api.meetup.com/'+groupname+'/photo_albums?&sign=true&photo-host=public&key='+key
+        context = requests.get(url)
+        if context.status_code == 200:
+            events= context.json()
+            for context in events:
+                event_id = context.get('event', {}).get('id', "")
+                if EventData.objects.filter(created_id=event_id).exists():
+                    print("hai")
+                    ph_data = EventPhoto()
+                    ph_data.event = EventData.objects.get(created_id=event_id)
+                    data = context.get('photo_sample')
+                    if data:
+                        for i in data:
+                            ph_data.highres_link = i['highres_link']
+                            ph_data.photo_link = i['photo_link']
+                            ph_data.thumb_link = i['thumb_link']
+                    ph_data.photo_id = context.get('id')
+                    ph_data.photo_link = context.get('link')
+                    ph_data.save()
+                else:
+                    pass
+            message = "data created sucessfully"
+        else:
+            message = "your url is not found"
+
+        return render(request, 'eventdata.html',{'message':message}) 
+
+
+class EventPhotoList(ListView):
+    model = EventPhoto
+    template_name = 'eventphotos_list.html'
+    success_url = reverse_lazy('dashboard')
+    paginate_by = 10
+    context_object_name = 'eventphotos'
 

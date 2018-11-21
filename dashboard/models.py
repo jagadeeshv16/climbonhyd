@@ -150,3 +150,19 @@ class EventData(models.Model):
     def __str__(self):
         return self.created_id 
 
+    def __str__(self):
+        return self.name
+
+class EventPhoto(models.Model):
+    event = models.ForeignKey(EventData,on_delete=models.CASCADE)
+    highres_link = models.URLField()
+    photo_link = models.URLField()
+    thumb_link = models.URLField()
+    photo_id = models.CharField(max_length=255)
+    photo_link = models.CharField(max_length=55)
+
+
+    def __str__(self):
+        return photo_id
+    
+

@@ -34,6 +34,8 @@ urlpatterns = [
     path('eventdata/',views.Upcoming_Eventdata.as_view(), name='eventdata'),
     path('pasteventsdata/',views.Past_Eventdata.as_view(), name='pastevents'),
     path('events/', views.EventDataList.as_view(), name='eventslist'),
+    path('eventphotos/', views.EventPhotoData.as_view(), name='eventphotos'),
+    path('eventphotslist/',views.EventPhotoList.as_view(), name="photolist")
 
 
 ]

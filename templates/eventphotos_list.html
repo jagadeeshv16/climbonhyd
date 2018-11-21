@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-16">
+
+<title>DATABASE</title>
+    <legend class="">DATABASE OF SiteContent
+    <button><a href="{% url 'sitecontent' %}">AddItem</a></button></legend>
+	<table class="table table-striped">
+    <tr>
+    	
+        <th>event</th>
+        <th>status</th>
+        <th>highres_link</th>
+        
+    </tr>
+    {% for item in eventphotos %}
+    <tr> 
+        <td>{{ item.event.name }}</td>
+        <td>{{item.event.status}}</td>
+        <td><img src="{{item.highres_link}}" alt="Image" width="100px"></td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+<center>
+{% if is_paginated %}
+      <div class="pagination">
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?status={{status}}&page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+              <span class="page-current">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?status={{status}}&page={{ page_obj.next_page_number }}">next</a>
+              {% endif %}
+          </span>
+      </div>
+    {% endif %}
+</center>
+
+
+
+{% endblock %}
+
