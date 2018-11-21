@@ -408,20 +408,20 @@ class Upcoming_Eventdata(CreateView):
                 time_feild = datetime.datetime.strptime(time_feild, '%H:%M').time()
                 ev_obj.created = context.get('created')
                 ev_obj.name = context.get('name')
-                ev_obj.created_id=context.get('id')
-                ev_obj.event_datetime=datetime.datetime.combine(date_feild,time_feild)
+                ev_obj.created_id = context.get('id')
+                ev_obj.event_datetime = datetime.datetime.combine(date_feild, time_feild)
                 ev_obj.status = context.get('status')
-                ev_obj.updated=context.get('updated')
-                ev_obj.updated_date=up_date
-                ev_obj.venue_name=context.get('venue', {}).get('name', "")
-                ev_obj.venue_address=context.get('venue', {}).get('address_1',"")
-                ev_obj.venue_city=context.get('venue', {}).get('city',"")
-                ev_obj.venue_country=context.get('venue', {}).get('country',"")
-                ev_obj.link=context.get('link')
-                ev_obj.Contact_Us=context.get('how_to_find_us')
+                ev_obj.updated = context.get('updated')
+                ev_obj.updated_date = up_date
+                ev_obj.venue_name = context.get('venue', {}).get('name', "")
+                ev_obj.venue_address = context.get('venue', {}).get('address_1', "")
+                ev_obj.venue_city = context.get('venue', {}).get('city',"")
+                ev_obj.venue_country = context.get('venue', {}).get('country', "")
+                ev_obj.link = context.get('link')
+                ev_obj.Contact_Us = context.get('how_to_find_us')
                 ev_obj.description = context.get('description')
                 ev_obj.save()
-            message="data created sucessfully"
+            message = "data created sucessfully"
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 
@@ -492,3 +492,18 @@ class EventDataList(ListView):
         data = super(EventDataList,self).get_context_data(**kwargs)
         data['status'] = self.request.GET.get('status')
         return data
+
+    def post(self, request, *args, **kwargs):
+        event_name = request.POST.get("event_name")
+        if not event_name == "":
+            eventsdata = EventData.objects.filter(name__icontains=event_name)
+            if eventsdata.exists():
+                return render(request,'events_list.html',{'eventsdata':eventsdata})
+            else:
+                error = 'search results not found.............'
+                return render(request,'events_list.html',{'eventsdata':eventsdata,'error':error})
+        else:
+            error = "please enter event name to search"
+            
+        return render(request,'events_list.html',{'error':error})
+
