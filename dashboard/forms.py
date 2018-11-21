@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordResetForm, AuthenticationForm
 
-from dashboard.models import User, Image, ImageAlbum, SiteContent
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData
 
 
 class RegisterForm(forms.ModelForm):
@@ -76,4 +76,13 @@ class SiteContentForm(forms.ModelForm):
     class Meta:
         model = SiteContent
         fields = ["name", "content", "active", "link"]
+
+
+class EventDataForm(forms.ModelForm):
+
+    class Meta:
+        model = EventData
+        fields = ["created", "name", "created_id", "event_datetime", "status", "updated", "venue_name",
+                 "venue_address", "venue_city", "venue_country", "link", "Contact_Us", "description",
+                 ]
 

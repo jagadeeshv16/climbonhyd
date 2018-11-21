@@ -380,3 +380,34 @@ a:focus, a:hover, a:active {
   background-color: #1a252f;
   border-color: #1a252f;
 }
+
+
+
+.navbar {
+  margin-bottom: 50px;
+  border-radius: 0;
+}
+    
+/* Remove the jumbotron's default bottom margin */ 
+.jumbotron {
+  margin-bottom: 0;
+}
+
+
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.carousel-inner img {
+      width: 100%; /* Set width to 100% */
+      margin: auto;
+      min-height:200px;
+  }
+
+  /* Hide the carousel text when the screen is less than 600 pixels wide */
+@media (max-width: 600px) {
+    .carousel-caption {
+      display: none; 
+    }
+  }

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+
+    <div class="carousel-inner" role="listbox">
+      <div class="item active">
+        <img src="http://www.skydiveorange.com/wp-content/uploads/Chesapeake-Bay-Bridge-1200x400.jpg" alt="Image">
+        <div class="carousel-caption">
+          <h3>CLIMBON</h3>
+          <p>$THE ADVENTURE CLUB$</p>
+        </div>      
+      </div>
+
+      <div class="item">
+        <img src="https://www.ramblers.com.au/wp-content/uploads/2018/09/Skydiving-When-Sick-1200x400.jpg" alt="Image">
+        <div class="carousel-caption">
+          <h3>Events photos $</h3>
+          <p>Event details</p>
+        </div>      
+      </div>
+
+      <div class="item">
+        <img src="http://www.idealtripinmorocco.com/wp-content/uploads/2016/02/4-vc-1200x400.jpg" alt="Image">
+        <div class="carousel-caption">
+          <h3>Make a Plan</h3>
+          <p>Enjoy with friends</p>
+        </div>      
+      </div>
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+</div>
+
+
+  <div class="container-fluid">
+    <div class="navbar navbar-expand-lg bg-secondary text-uppercase" id="mainNav">
+      <ul class="nav navbar-nav list-inline">
+        <li><a href="{% url  'eventslist' %}?status=upcoming"><h4>UPCOMING</h4></a></li>
+        <li><a href="{% url 'eventslist' %}?status=past"><h4>PAST</h4></a></li>
+        <form method="POST">
+          {% csrf_token %}
+        <li><input type="text" placeholder="Search.." name="event_name">
+        <button type="submit"><i class="fas fa-search"></i></button></li>
+        <b><li><h5>{{error}}</h5></li><b>
+      </form>
+      </ul>
+    </div>
+  </div>
+
+<div class="container"> 
+{% for item in eventsdata %}   
+  <div class="row ">
+    <div class="col-sm-9">
+      <div class="panel panel-danger">
+        <div class="panel-heading text-uppercase">{{item.name}}</div>
+        <div class="panel-body"><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|safe}}</div>
+        <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div><br>
+<center>
+{% if is_paginated %}
+      <div class="pagination">
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?status={{status}}&page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+              <span class="page-current">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?status={{status}}&page={{ page_obj.next_page_number }}">next</a>
+              {% endif %}
+          </span>
+      </div>
+    {% endif %}
+</center>
+
+
+{% endblock %}
+
+

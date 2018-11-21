@@ -1,4 +1,10 @@
 
+import requests
+import json
+import time
+import datetime
+
+from django.conf import settings
 from django.utils import timezone
 from django.shortcuts import render,HttpResponse,redirect,get_object_or_404,HttpResponseRedirect,reverse
 from django.urls import reverse_lazy,reverse
@@ -7,6 +13,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.views import View
 from django.shortcuts import resolve_url
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
@@ -22,11 +29,12 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User, Image, ImageAlbum, SiteContent
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
     PasswordResetEmailForm, UserEditForm,
-    ImageForm, ImageAlbumForm, SiteContentForm
+    ImageForm, ImageAlbumForm, SiteContentForm,
+    EventDataForm
 )
 
 
@@ -367,4 +375,135 @@ class HomePage(TemplateView):
         data = super(HomePage,self).get_context_data(**kwargs)
         data['sitelist'] = SiteContent.objects.filter(active=True).order_by('index')
         return data
+
+
+class Upcoming_Eventdata(CreateView):
+    model = EventData
+    form_class = EventDataForm
+    template_name = 'eventdata.html'
+    success_url = reverse_lazy('sitecontent_list')
+
+
+    def get(self, request, *args, **kwargs):
+        groupname = settings.GROUP_NAME
+        key = settings.API_KEY
+        url = 'https://api.meetup.com/'+groupname+'/events?&sign=true&photo-host=public&page=20&key='+key
+        context = requests.get(url)
+        if context.status_code == 200:
+            events= context.json()
+            for context in events:
+                up_date = context.get('updated')
+                up_date = int(str(up_date)[:10])
+                up_date = time.strftime("%Y-%m-%d %H:%M", time.localtime(up_date))
+                up_date_date = datetime.datetime.strptime(up_date, '%Y-%m-%d %H:%M')
+                if EventData.objects.filter(created_id=context['id']).exists():
+                    ev_obj = EventData.objects.filter(created_id=context['id']).first()
+                    if not ev_obj.updated_date.replace(tzinfo=timezone.utc)< up_date_date.replace(tzinfo=timezone.utc):
+                        continue
+                else:
+                    ev_obj = EventData()
+                date_feild = context.get('local_date')
+                date_feild = datetime.datetime.strptime(date_feild, "%Y-%m-%d")
+                time_feild = context.get('local_time')
+                time_feild = datetime.datetime.strptime(time_feild, '%H:%M').time()
+                ev_obj.created = context.get('created')
+                ev_obj.name = context.get('name')
+                ev_obj.created_id = context.get('id')
+                ev_obj.event_datetime = datetime.datetime.combine(date_feild, time_feild)
+                ev_obj.status = context.get('status')
+                ev_obj.updated = context.get('updated')
+                ev_obj.updated_date = up_date
+                ev_obj.venue_name = context.get('venue', {}).get('name', "")
+                ev_obj.venue_address = context.get('venue', {}).get('address_1', "")
+                ev_obj.venue_city = context.get('venue', {}).get('city',"")
+                ev_obj.venue_country = context.get('venue', {}).get('country', "")
+                ev_obj.link = context.get('link')
+                ev_obj.Contact_Us = context.get('how_to_find_us')
+                ev_obj.description = context.get('description')
+                ev_obj.save()
+            message = "data created sucessfully"
+        else:
+            message = "your url page is not loaded"
+        return render(request, 'eventdata.html',{'message':message}) 
+
+
+class Past_Eventdata(CreateView):
+    model = EventData
+    form_class = EventDataForm
+    template_name = 'eventdata.html'
+    success_url = reverse_lazy('sitecontent_list')
+
+
+    def get(self, request, *args, **kwargs):
+        groupname = settings.GROUP_NAME
+        key = settings.API_KEY
+        url = 'https://api.meetup.com/'+groupname+'/events?&sign=true&photo-host=public&status=past&key='+key
+        context = requests.get(url)
+        if context.status_code == 200:
+            events = context.json()
+            for context in events:
+                if EventData.objects.filter(created_id=context['id']).exists():
+                    message = "the data is already saved"
+                else:
+                    date_feild = context.get('local_date')
+                    date_feild = datetime.datetime.strptime(date_feild, "%Y-%m-%d")
+                    time_feild = context.get('local_time')
+                    time_feild = datetime.datetime.strptime(time_feild, '%H:%M').time()
+                    up_date = context.get('updated')
+                    up_date = int(str(up_date)[:10])
+                    up_date = time.strftime("%Y-%m-%d %H:%M", time.localtime(up_date))
+                    event = EventData.objects.create(
+                       created=context.get('created'),
+                       name=context.get('name'),
+                       created_id=context.get('id'),
+                       event_datetime=datetime.datetime.combine(date_feild,time_feild),
+                       status=context.get('status'),
+                       updated=context.get('updated'),
+                       updated_date=up_date,
+                       venue_name=context.get('venue', {}).get('name', ""),
+                       venue_address=context.get('venue', {}).get('address_1',""),
+                       venue_city=context.get('venue', {}).get('city',""),
+                       venue_country=context.get('venue', {}).get('country',""),
+                       link=context.get('link'),
+                       Contact_Us=context.get('how_to_find_us'),
+                       description=context.get('description'))
+                    message = "data created sucessfully"
+        else:
+            message = "your url page is not loaded"
+        return render(request, 'eventdata.html',{'message':message}) 
+
+
+
+class EventDataList(ListView):
+    model = EventData
+    template_name = 'events_list.html'
+    success_url = reverse_lazy('dashboard')
+    paginate_by = 10
+    context_object_name = 'eventsdata'
+
+    def get_queryset(self):
+        events = EventData.objects.all()
+        if self.request.GET.get('status') == "past":
+            return events.filter(status='past')
+        else:
+            return events.filter(status='upcoming')
+
+    def get_context_data(self, **kwargs):
+        data = super(EventDataList,self).get_context_data(**kwargs)
+        data['status'] = self.request.GET.get('status')
+        return data
+
+    def post(self, request, *args, **kwargs):
+        event_name = request.POST.get("event_name")
+        if not event_name == "":
+            eventsdata = EventData.objects.filter(name__icontains=event_name)
+            if eventsdata.exists():
+                return render(request,'events_list.html',{'eventsdata':eventsdata})
+            else:
+                error = 'search results not found.............'
+                return render(request,'events_list.html',{'eventsdata':eventsdata,'error':error})
+        else:
+            error = "please enter event name to search"
+            
+        return render(request,'events_list.html',{'error':error})
 

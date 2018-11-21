@@ -129,3 +129,24 @@ class SiteContent(models.Model):
     index = models.IntegerField()
     link = models.CharField(max_length=20, null=True, blank=True)
 
+
+class EventData(models.Model):
+    active = models.BooleanField(_('active'), default=False) 
+    created =models.CharField(max_length=25)
+    name = models.CharField(max_length=255)
+    created_id = models.CharField(max_length=255)
+    event_datetime = models.DateTimeField()
+    status = models.CharField(max_length=55)
+    updated = models.CharField(max_length=25)
+    updated_date = models.DateTimeField(blank=True, null=True)
+    venue_name = models.CharField(max_length=255, null=True, blank=True)
+    venue_address = models.CharField(max_length=255, null=True, blank=True)
+    venue_city = models.CharField(max_length=255, null=True, blank=True)
+    venue_country = models.CharField(max_length=255, null=True, blank=True)
+    link = models.CharField(max_length=55)
+    Contact_Us = models.CharField(max_length=1000,null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.created_id 
+
