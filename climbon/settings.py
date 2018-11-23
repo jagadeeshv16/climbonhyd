@@ -150,9 +150,13 @@ CELERY_IMPORTS = ('dashboard.tasks', )
 
 CELERY_BEAT_SCHEDULE = {
     'event-data': { 
-         'task':'dashboard.tasks.event_data', 
+         'task':'dashboard.tasks.event_data',
          'schedule': crontab(minute=0, hour=6),
-        },                 
+        }, 
+    'event-photo':{
+        'task':'dashboard.tasks.event_photo',
+        'schedule': crontab(),
+    },                
 
 }
 

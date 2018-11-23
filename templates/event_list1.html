@@ -1,0 +1,21 @@
+
+
+{% for item in eventsdata %}   
+  <div class="row ">
+    <div class="col-sm-9">
+      <div class="panel panel-danger">
+        <div class="panel-heading text-uppercase">{{item.name}}</div>
+        <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|safe}}</div>
+        {%for i in photo%}{%if i.event.id == item.id%}<img src="{{i.highres_link}}" alt="Image"  width="200" height="200">{%endif%}{%endfor%}
+        <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
+      </div>
+    </div>
+  </div> 
+  {% endfor %}
+
+   <div class="loader"></div>
+<center>
+{% if page_obj.has_next %}
+    <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
+  {% endif %}
+</center>

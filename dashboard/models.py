@@ -155,11 +155,10 @@ class EventData(models.Model):
 
 class EventPhoto(models.Model):
     event = models.ForeignKey(EventData,on_delete=models.CASCADE)
-    highres_link = models.URLField()
-    photo_link = models.URLField()
-    thumb_link = models.URLField()
+    highres_link = models.URLField(max_length=500)
+    photo_link = models.URLField(max_length=500)
+    thumb_link = models.URLField(max_length=500)
     photo_id = models.CharField(max_length=255)
-    photo_link = models.CharField(max_length=55)
 
 
     def __str__(self):

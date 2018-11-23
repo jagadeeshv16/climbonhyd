@@ -1,27 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="col-md-16">
-
-<title>DATABASE</title>
-    <legend class="">DATABASE OF SiteContent
-    <button><a href="{% url 'sitecontent' %}">AddItem</a></button></legend>
-	<table class="table table-striped">
-    <tr>
-    	
-        <th>event</th>
-        <th>status</th>
-        <th>highres_link</th>
-        
-    </tr>
-    {% for item in eventphotos %}
-    <tr> 
-        <td>{{ item.event.name }}</td>
-        <td>{{item.event.status}}</td>
-        <td><img src="{{item.highres_link}}" alt="Image" width="100px"></td>
-    </tr>
-    {% endfor %}
-</table>
+<form method="POST">
+  {% csrf_token %}
+<div class="active-cyan active-cyan-2 mb-3">
+  <input class="form-control" type="text" placeholder="Search" aria-label="Search" name="event_name">
+  <p>{{error}}</p>
 </div>
+</form>
+<br><br><br>
+{% for item in eventphotos %}
+<dl>
+<dt><img src="{{item.highres_link}}" alt="Image" class="img-circle" width="200" height="200">
+    {{ item.event.name }}    
+  </dl>
+{% endfor %}
+
 <center>
 {% if is_paginated %}
       <div class="pagination">
@@ -39,8 +32,7 @@
       </div>
     {% endif %}
 </center>
-
-
-
 {% endblock %}
+
+
 

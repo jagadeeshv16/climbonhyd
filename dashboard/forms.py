@@ -91,4 +91,4 @@ class EventPhotoForm(forms.ModelForm):
 
     class Meta:
         model = EventPhoto
-        fields = ["event", "highres_link", "photo_link", "thumb_link", "photo_id", "photo_link"]
+        fields = ["event", "highres_link", "photo_link", "thumb_link", "photo_id"]

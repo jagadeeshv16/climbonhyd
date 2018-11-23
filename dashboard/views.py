@@ -484,36 +484,33 @@ class EventDataList(ListView):
     def get_queryset(self):
         events = EventData.objects.all()
         if self.request.GET.get('status') == "past":
-            return events.filter(status='past')
-        else:
-            return events.filter(status='upcoming')
+            events = events.filter(status='past')
+        if self.request.GET.get('status') == "upcoming":
+            events = events.filter(status='upcoming')
+        if self.request.GET.get('event_name'):
+            events = events.filter(name__icontains=self.request.GET.get('event_name'))
+        return events
 
     def get_context_data(self, **kwargs):
         data = super(EventDataList,self).get_context_data(**kwargs)
         data['status'] = self.request.GET.get('status')
+        data['event_name'] = self.request.GET.get('event_name')
+        data['photo'] = EventPhoto.objects.all()
         return data
 
-    def post(self, request, *args, **kwargs):
-        event_name = request.POST.get("event_name")
-        if not event_name == "":
-            eventsdata = EventData.objects.filter(name__icontains=event_name)
-            if eventsdata.exists():
-                return render(request,'events_list.html',{'eventsdata':eventsdata})
-            else:
-                error = 'search results not found.............'
-                return render(request,'events_list.html',{'eventsdata':eventsdata,'error':error})
-        else:
-            error = "please enter event name to search"
-
-        return render(request,'events_list.html',{'error':error})
-
+    def get_template_names(self):
+        page = self.request.GET.get('page')
+        print(page,"page")
+        if page == None or int(page) == 1:
+            return self.template_name
+        if int(page) >= 2:
+            return 'event_list1.html'
 
 class EventPhotoData(CreateView):
     model = EventPhoto
     form_class = EventPhotoForm
     template_name = 'eventdata.html'
     success_url = reverse_lazy('sitecontent_list')
-
 
 
     def get(self, request, *args, **kwargs):
@@ -525,32 +522,49 @@ class EventPhotoData(CreateView):
             events= context.json()
             for context in events:
                 event_id = context.get('event', {}).get('id', "")
-                if EventData.objects.filter(created_id=event_id).exists():
-                    print("hai")
-                    ph_data = EventPhoto()
-                    ph_data.event = EventData.objects.get(created_id=event_id)
-                    data = context.get('photo_sample')
-                    if data:
-                        for i in data:
-                            ph_data.highres_link = i['highres_link']
-                            ph_data.photo_link = i['photo_link']
-                            ph_data.thumb_link = i['thumb_link']
-                    ph_data.photo_id = context.get('id')
-                    ph_data.photo_link = context.get('link')
-                    ph_data.save()
+                photo_id = context.get('id')
+                if EventPhoto.objects.filter(photo_id=photo_id).exists():
+                    message = "data created"
                 else:
-                    pass
-            message = "data created sucessfully"
+                    if EventData.objects.filter(created_id=event_id).exists():
+                        ph_data = EventPhoto()
+                        ph_data.event = EventData.objects.get(created_id=event_id)
+                        data = context.get('photo_sample')
+                        if data:
+                            for i in data:
+                                EventPhoto.objects.create(
+                                event = EventData.objects.get(created_id=event_id),
+                                highres_link = i['highres_link'],
+                                photo_link = i['photo_link'],
+                                thumb_link = i['thumb_link'],
+                                photo_id = context.get('id'))
+                        else:
+                            pass
+                    message = "data created sucessfully"
         else:
             message = "your url is not found"
 
         return render(request, 'eventdata.html',{'message':message}) 
 
 
-class EventPhotoList(ListView):
-    model = EventPhoto
-    template_name = 'eventphotos_list.html'
-    success_url = reverse_lazy('dashboard')
-    paginate_by = 10
-    context_object_name = 'eventphotos'
+# class EventPhotoList(ListView):
+#     model = EventPhoto
+#     template_name = 'eventphotos_list.html'
+#     success_url = reverse_lazy('dashboard')
+#     paginate_by = 10
+#     context_object_name = 'eventphotos'
 
+
+#     def post(self, request, *args, **kwargs):
+#         event_name = request.POST.get("event_name")
+#         if not event_name == "":
+#             eventphotos = EventPhoto.objects.filter(event__name__icontains=event_name)
+#             if eventphotos.exists():
+#                 return render(request,'eventphotos_list.html',{'eventphotos':eventphotos})
+#             else:
+#                 error = 'search results not found.............'
+#                 return render(request,'eventphotos_list.html',{'eventphotos':eventphotos,'error':error})
+#         else:
+#             error = "please enter event name to search"
+
+#         return render(request,'eventphotos_list.html',{'error':error})

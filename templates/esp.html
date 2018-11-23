@@ -51,6 +51,7 @@
       <ul class="nav navbar-nav list-inline">
         <li><a href="{% url  'eventslist' %}?status=upcoming"><h4>UPCOMING</h4></a></li>
         <li><a href="{% url 'eventslist' %}?status=past"><h4>PAST</h4></a></li>
+        <li><a href="{% url 'photolist' %}"><h4>PHOTOS</h4></a></li>
         <form method="GET">
         <li><input type="text" placeholder="Search.." name="event_name">
         <button type="submit"><i class="fas fa-search"></i></button></li>
@@ -60,53 +61,36 @@
       </ul>
     </div>
   </div>
-<div class="container" id="con">
-  {% for item in eventsdata %}   
+
+<div class="container"> 
+{% for item in eventsdata %}   
   <div class="row ">
     <div class="col-sm-9">
       <div class="panel panel-danger">
         <div class="panel-heading text-uppercase">{{item.name}}</div>
-        <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|safe}}</div>
-        {%for i in photo%}{%if i.event.id == item.id%}<img src="{{i.highres_link}}" alt="Image" width="200" height="200">{%endif%}{%endfor%}
+        <div class="panel-body"><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|safe}}</div>
         <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
       </div>
     </div>
-  </div> 
+  </div>
   {% endfor %}
 </div><br>
-    <div class="loader"></div>
 <center>
-{% if page_obj.has_next %}
-    <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
-  {% endif %}
+{% if is_paginated %}
+      <div class="pagination">
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+              <span class="page-current">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}">next</a>
+              {% endif %}
+          </span>
+      </div>
+    {% endif %}
 </center>
 
 {% endblock %}
-{% block extra_js %}
-<script type="text/javascript">
-  var processScroll = true;
-  var timeout;
-$(window).scroll(function() {
-  clearTimeout(timeout);  
-  
-  timeout = setTimeout(function() {
-    if (processScroll  && $(window).scrollTop() > $(document).height() - $(window).height() -300) {
-        console.log(93)
-        $('#loader').hide();
-        var events_url = $("#load_events").attr('href')
-        $.get(events_url, function(data,status){
-        if (events_url==undefined){
-          processScroll = false;
-        }else{
-          processScroll = true; 
-        console.log(status,events_url)
-        $("#load_events").remove()
-        $("#con").append(data)  
-        }              
-    });
-    }
-  },1000);
-});
-</script>
-{% endblock extra_js %}
-
