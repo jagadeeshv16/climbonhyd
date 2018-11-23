@@ -500,7 +500,6 @@ class EventDataList(ListView):
 
     def get_template_names(self):
         page = self.request.GET.get('page')
-        print(page,"page")
         if page == None or int(page) == 1:
             return self.template_name
         if int(page) >= 2:
