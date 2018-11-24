@@ -1,21 +1,99 @@
-
-
 {% for item in eventsdata %}   
-  <div class="row ">
-    <div class="col-sm-9">
+  <div class="row " >
+    <div class="col-sm-9" >
       <div class="panel panel-danger">
         <div class="panel-heading text-uppercase">{{item.name}}</div>
-        <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|safe}}</div>
-        {%for i in photo%}{%if i.event.id == item.id%}<img src="{{i.highres_link}}" alt="Image"  width="200" height="200">{%endif%}{%endfor%}
+        <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|striptags}}</div>
+                  
+                  <div class="row ">
+                  {%for i in item.get_photos %}
+                    <div class="column"  >
+                      <img src="{{i.highres_link}}" style="width:20%" onclick="openModal({{forloop.parentloop.counter}}{{page_obj.number}});currentSlide({{forloop.counter}})" class="hover-shadow cursor image">
+                    </div>
+                  {%endfor%}
+                  </div>
+
+                  <div id="myModal{{forloop.counter}}{{page_obj.number}}" class="modal">
+                    <span class="close cursor" onclick="closeModal({{forloop.counter}})">&times;</span>
+
+                    <div class="modal-content">
+                    {%for i in item.get_photos %}
+                      <div class="mySlides">
+                        <div class="numbertext">{{forloop.counter}}</div>
+                          <img src="{{i.highres_link}}" style="width:20%" class="image">
+                      </div>
+                    {%endfor%}
+                      
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                      <div class="caption-container">
+                      <p id="caption"></p>
+                      </div>
+
+                    {%for i in item.get_photos %}
+                      <div class="column">
+                        <img class="demo cursor image" src="{{i.highres_link}}" style="width:20%" onclick="currentSlide({{forloop.counter}})" alt="{{forloop.counter}}" >
+                      </div>
+                    {%endfor%}
+
+                      </div>
+                  </div>
         <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
-      </div>
+        </div>
     </div>
   </div> 
   {% endfor %}
 
-   <div class="loader"></div>
-<center>
+</div><br>
+    <div class="loader"></div>
+
+
+
 {% if page_obj.has_next %}
     <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
-  {% endif %}
-</center>
+{% endif %}
+
+
+{% block extra_js %}
+<script type="text/javascript">
+function openModal(num) {
+  document.getElementById('myModal'+num).style.display = "block";
+}
+
+function closeModal(num) {
+  document.getElementById('myModal'+num).style.display = "none";
+}
+
+var slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  var captionText = document.getElementById("caption");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  captionText.innerHTML = dots[slideIndex-1].alt;
+}
+
+  
+
+</script>
+{% endblock extra_js %}

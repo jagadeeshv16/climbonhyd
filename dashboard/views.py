@@ -299,7 +299,6 @@ class SiteContentList(LoginRequiredMixin, ListView):
     queryset = SiteContent.objects.order_by('index')
     context_object_name = 'sitelist'
 
-
     def get_ordering(self):
         return self.ordering
 
@@ -370,7 +369,6 @@ def down(request,id):
 class HomePage(TemplateView):
     template_name = 'frontend/index.html'
     
-
     def get_context_data(self, **kwargs):
         data = super(HomePage,self).get_context_data(**kwargs)
         data['sitelist'] = SiteContent.objects.filter(active=True).order_by('index')
@@ -382,7 +380,6 @@ class Upcoming_Eventdata(CreateView):
     form_class = EventDataForm
     template_name = 'eventdata.html'
     success_url = reverse_lazy('sitecontent_list')
-
 
     def get(self, request, *args, **kwargs):
         groupname = settings.GROUP_NAME
@@ -495,7 +492,6 @@ class EventDataList(ListView):
         data = super(EventDataList,self).get_context_data(**kwargs)
         data['status'] = self.request.GET.get('status')
         data['event_name'] = self.request.GET.get('event_name')
-        data['photo'] = EventPhoto.objects.all()
         return data
 
     def get_template_names(self):
@@ -510,7 +506,6 @@ class EventPhotoData(CreateView):
     form_class = EventPhotoForm
     template_name = 'eventdata.html'
     success_url = reverse_lazy('sitecontent_list')
-
 
     def get(self, request, *args, **kwargs):
         groupname = settings.GROUP_NAME
@@ -542,7 +537,6 @@ class EventPhotoData(CreateView):
                     message = "data created sucessfully"
         else:
             message = "your url is not found"
-
         return render(request, 'eventdata.html',{'message':message}) 
 
 
