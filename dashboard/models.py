@@ -66,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     bloodgroup = models.CharField(max_length=30, blank=True)
     contact = models.CharField(max_length=20,null=True, blank=True)
     emergency_contact_no = models.CharField(max_length=20,null=True, blank=True)
-    photo = models.ImageField(null=True,blank=True,upload_to='media/photos/')
+    photo = models.ImageField(null=True, blank=True, upload_to='media/photos/')
     About = models.CharField(max_length=2000, null=True, blank=True)
 
     USERNAME_FIELD = 'email'

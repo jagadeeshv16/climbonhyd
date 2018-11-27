@@ -153,6 +153,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
             return JsonResponse(data)
         return HttpResponseRedirect(self.get_success_url())
 
+
 class ForgotPassword(PasswordResetView):
     """form with email field to get reset password link
     """
@@ -263,8 +264,6 @@ class StaffDelete(LoginRequiredMixin, DeleteView):
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk=kwargs['pk'])
         return render(request, 'staffdelete.html',{'user':user})
-
-
 
 
 class HomePage(TemplateView):

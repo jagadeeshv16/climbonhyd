@@ -31,6 +31,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
       <div class="container">
+        <img src="https://secure.meetupstatic.com/photos/event/1/e/f/c/600_436807932.jpeg" width="50px" height="50px">
         <a class="navbar-brand js-scroll-trigger" href="#page-top">ClimbOn</a>
         <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
@@ -39,7 +40,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item mx-0 mx-lg-1">
-              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'eventslist' %}?status=past">EVENTS</a>
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'eventslist' %}?status=upcoming">EVENTS</a>
             </li>
             {% load event %}
             {% site_names as queries %}

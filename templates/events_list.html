@@ -1,42 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
-  body {background:#ccc}
-  </style>
+
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
     <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
-
     <div class="carousel-inner" role="listbox">
-      <div class="item active">
-        <img src="http://www.skydiveorange.com/wp-content/uploads/Chesapeake-Bay-Bridge-1200x400.jpg" alt="Image">
-        <div class="carousel-caption">
-          <h3>CLIMBON</h3>
-          <p>$THE ADVENTURE CLUB$</p>
-        </div>      
-      </div>
-
-      <div class="item">
-        <img src="https://www.ramblers.com.au/wp-content/uploads/2018/09/Skydiving-When-Sick-1200x400.jpg" alt="Image">
-        <div class="carousel-caption">
-          <h3>Events photos $</h3>
-          <p>Event details</p>
-        </div>      
-      </div>
-
-      <div class="item">
-        <img src="http://www.idealtripinmorocco.com/wp-content/uploads/2016/02/4-vc-1200x400.jpg" alt="Image">
-        <div class="carousel-caption">
-          <h3>Make a Plan</h3>
-          <p>Enjoy with friends</p>
-        </div>      
-      </div>
+        <div class="item active">
+            <img src="http://www.skydiveorange.com/wp-content/uploads/Chesapeake-Bay-Bridge-1200x400.jpg" alt="Image">
+            <div class="carousel-caption">
+                <h3>CLIMBON</h3>
+                <p>$THE ADVENTURE CLUB$</p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="https://www.ramblers.com.au/wp-content/uploads/2018/09/Skydiving-When-Sick-1200x400.jpg" alt="Image">
+            <div class="carousel-caption">
+                <h3>Events photos $</h3>
+                <p>Event details</p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="http://www.idealtripinmorocco.com/wp-content/uploads/2016/02/4-vc-1200x400.jpg" alt="Image">
+            <div class="carousel-caption">
+                <h3>Make a Plan</h3>
+                <p>Enjoy with friends</p>
+            </div>
+        </div>
     </div>
-
     <!-- Left and right controls -->
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -47,75 +41,89 @@
       <span class="sr-only">Next</span>
     </a>
 </div>
-
-
-  <div class="container-fluid">
-    <div class="navbar navbar-expand-lg bg-secondary text-uppercase" id="mainNav">
-      <ul class="nav navbar-nav list-inline">
-        <li><a href="{% url  'eventslist' %}?status=upcoming"><h4>UPCOMING</h4></a></li>
-        <li><a href="{% url 'eventslist' %}?status=past"><h4>PAST</h4></a></li>
-        <form method="GET">
-        <li><input type="text" placeholder="Search.." name="event_name">
-        <button type="submit"><i class="fas fa-search"></i></button></li>
-        <input class="invisible" type="aria-hidden" name="status" value="{{status}}">
-        <b><li><h5>{{error}}</h5></li><b>
+<div class="container-fluid">
+    <div>
+        <ul class="nav navbar-nav list-inline">
+            <li><a href="{% url  'eventslist' %}?status=upcoming"><h4>UPCOMING</h4></a></li>
+            <li><a href="{% url 'eventslist' %}?status=past"><h4>PAST</h4></a></li>
+            <form method="GET">
+                <li><input type="text" placeholder="Search.." name="event_name">
+                    <button type="submit"><i class="fas fa-search"></i></button></li>
+                <input class="invisible" type="aria-hidden" name="status" value="{{status}}">
+                <b><li><h5>{{error}}</h5></li><b>
       </form>
       </ul>
     </div>
   </div>
 <div class="container" id="con">
   {% for item in eventsdata %}   
-  <div class="row " >
-    <div class="col-sm-9" >
+  <div class="row events_list">
+    <div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">
+    <div class="col-sm-12">
       <div class="panel panel-danger">
         <div class="panel-heading text-uppercase">{{item.name}}</div>
-        <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|striptags}}</div>
-                  <div class="row ">
-                    {%for i in item.get_photos %}
-                      <div class="column"  >
-                       <img src="{{i.highres_link}}" style="width:20%" onclick="openModal({{forloop.parentloop.counter}});currentSlide({{forloop.counter}})" class="hover-shadow cursor image">
-                      </div>
-                    {%endfor%}
-                  </div>
-
-                  <div id="myModal{{forloop.counter}}" class="modal">
-                    <span class="close cursor" onclick="closeModal({{forloop.counter}})">&times;</span>
-                    <div class="modal-content">
-                        {%for i in item.get_photos %}
-                          <div class="mySlides">
-                            <div class="numbertext">1</div>
-                              <img src="{{i.highres_link}}" style="width:20%" class="image">
-                            </div>
-                        {%endfor%}
-                      
-                      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                      <a class="next" onclick="plusSlides(1)">&#10095;</a>
-                      
-                      <div class="caption-container">
-                        <p id="caption"></p>
-                      </div>
-                      
-                        {%for i in item.get_photos %}
-                          <div class="column">
-                            <img class="demo cursor image" src="{{i.highres_link}}" style="width:20%" onclick="currentSlide({{forloop.counter}})" alt="we{{forloop.counter}}" >
-                          </div>
-                        {%endfor%}
-
-                    </div>
-                  </div>
+        <div class="panel-body"><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|striptags}}</div>
+          <div class="container">
+            <div class="row">
+              {%for i in item.get_photos %}
+                <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                  <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="" data-image="{{i.highres_link}}" data-target="#image-gallery">
+                    <img class="img-thumbnail" src="{{i.thumb_link}}" alt="Another alt text">
+                   </a>
+                </div>
+              {%endfor%}
+            </div>
+          </div>
         <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
       </div>
     </div>
+  </div>
   </div> 
   {% endfor %}
+   <div class="modal fade" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="image-gallery-title"></h4>
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img id="image-gallery-image" class="img-responsive col-md-12" src="">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary float-left" id="show-previous-image"><i class="fa fa-arrow-left"></i>
+            </button>
+
+            <button type="button" id="show-next-image" class="btn btn-secondary float-right"><i class="fa fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div><br>
 
-    <div class="loader"></div>
-
+<center><div class="loader navbar navbar-default navbar-fixed-bottom">
+<div class="container">
+  <div class="row">
+    <div id="loader">
+        <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="lading"></div>
+    </div>
+  </div>
+</div</div></center>
 
 {% if page_obj.has_next %}
     <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
   {% endif %}
+ 
 {% endblock %}
 
 {% block extra_js %}
@@ -128,60 +136,20 @@ $(window).scroll(function() {
   
   timeout = setTimeout(function() {
     if (processScroll  && $(window).scrollTop() > $(document).height() - $(window).height() -300) {
-        $('#loader').hide();
+        $('.loader').hide();
         var events_url = $("#load_events").attr('href')
         $.get(events_url, function(data,status){
         if (events_url==undefined){
           processScroll = false;
+          $('.loader').hide();
         }else{
           processScroll = true; 
         $("#load_events").remove()
-        $("#con").append(data)  
+        $("#con").append(data)
         }              
     });
     }
   },1000);
 });
 </script>
-
-<script type="text/javascript">
-function openModal(num) {
-  document.getElementById('myModal'+num).style.display = "block";
-}
-
-function closeModal(num) {
-  document.getElementById('myModal'+num).style.display = "none";
-}
-
-var slideIndex = 1;
-showSlides(slideIndex);
-
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  var i;
-  var slides = document.getElementsByClassName("mySlides");
-  var dots = document.getElementsByClassName("demo");
-  var captionText = document.getElementById("caption");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-      dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-  captionText.innerHTML = dots[slideIndex-1].alt;
-}
-</script>
-
 {% endblock extra_js %}
-

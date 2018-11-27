@@ -1,53 +1,51 @@
 {% for item in eventsdata %}   
-  <div class="row " >
-    <div class="col-sm-9" >
+  <div class="row events_list " >
+    <div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">
+    <div class="col-sm-12" >
       <div class="panel panel-danger">
         <div class="panel-heading text-uppercase">{{item.name}}</div>
         <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|striptags}}</div>
-                  
-                  <div class="row ">
-                  {%for i in item.get_photos %}
-                    <div class="column"  >
-                      <img src="{{i.highres_link}}" style="width:20%" onclick="openModal({{forloop.parentloop.counter}}{{page_obj.number}});currentSlide({{forloop.counter}})" class="hover-shadow cursor image">
+                  <div class="container">
+                    <div class="row">
+                      {%for i in item.get_photos %}
+                      <div class="model{{forloop.counter}}{{page_obj.number}}">
+                         <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                          <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="" data-image="{{i.highres_link}}" data-target="#image-gallery">
+                           <img class="img-thumbnail" src="{{i.thumb_link}}" alt="Another alt text">
+                          </a>
+                        </div>
+                        </div>
+                      {%endfor%}
                     </div>
-                  {%endfor%}
                   </div>
-
-                  <div id="myModal{{forloop.counter}}{{page_obj.number}}" class="modal">
-                    <span class="close cursor" onclick="closeModal({{forloop.counter}})">&times;</span>
-
-                    <div class="modal-content">
-                    {%for i in item.get_photos %}
-                      <div class="mySlides">
-                        <div class="numbertext">{{forloop.counter}}</div>
-                          <img src="{{i.highres_link}}" style="width:20%" class="image">
-                      </div>
-                    {%endfor%}
-                      
-                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
-                      <div class="caption-container">
-                      <p id="caption"></p>
-                      </div>
-
-                    {%for i in item.get_photos %}
-                      <div class="column">
-                        <img class="demo cursor image" src="{{i.highres_link}}" style="width:20%" onclick="currentSlide({{forloop.counter}})" alt="{{forloop.counter}}" >
-                      </div>
-                    {%endfor%}
-
-                      </div>
-                  </div>
+                  
         <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
         </div>
     </div>
+  </div>
   </div> 
   {% endfor %}
 
+
+
 </div><br>
-    <div class="loader"></div>
-
-
+<center><div class="loader navbar navbar-default navbar-fixed-bottom">
+<center><div class="loader ">
+<div class="container">
+  <div class="row">
+    <div id="loader">
+        <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="lading"></div>
+    </div>
+  </div>
+</div</div></center>
 
 {% if page_obj.has_next %}
     <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
@@ -55,45 +53,102 @@
 
 
 {% block extra_js %}
-<script type="text/javascript">
-function openModal(num) {
-  document.getElementById('myModal'+num).style.display = "block";
-}
-
-function closeModal(num) {
-  document.getElementById('myModal'+num).style.display = "none";
-}
-
-var slideIndex = 1;
-showSlides(slideIndex);
-
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  var i;
-  var slides = document.getElementsByClassName("mySlides");
-  var dots = document.getElementsByClassName("demo");
-  var captionText = document.getElementById("caption");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-      dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-  captionText.innerHTML = dots[slideIndex-1].alt;
-}
-
+<script >
   
+  $(document).ready(function(){
+    $(".thumbnail").click(function(){
+        var events_url = $(".thumbnail").attr('data-target');
+        console.log(events_url);
+    });
+});
+ var events_url = $(".thumbnail").attr('data-target');
+ console.log(events_url);
 
 </script>
+
+
+<!--<script type="text/javascript">
+
+
+
+let modalId = $('#image-gallery');
+
+$(document).ready(function () {
+  loadGallery(true, 'a.thumbnail');
+  setInterval(function() {
+    loadGallery(true, 'a.thumbnail');
+  }, 2000);
+
+
+     //This function disables buttons when needed
+ function disableButtons(counter_max, counter_current) {
+   $('#show-previous-image, #show-next-image').show();
+   if (counter_max === counter_current) {
+     $('#show-next-image').hide();
+   } else if (counter_current === 1) {
+     $('#show-previous-image').hide();
+   }
+ }
+
+     /**
+      *
+      * @param setIDs        Sets IDs when DOM is loaded. If using a PHP counter, set to false.
+      * @param setClickAttr  Sets the attribute for the click handler.
+      */
+
+function loadGallery(setIDs, setClickAttr) {
+ let current_image, selector, counter = 0;
+
+ $('#show-next-image, #show-previous-image').click(function () {
+     if ($(this).attr('id') === 'show-previous-image') {
+       current_image--;
+     } else {
+       current_image++;
+     }
+
+     selector = $('[data-image-id="' + current_image + '"]');
+     updateGallery(selector);
+   });
+
+ function updateGallery(selector) {
+   let $sel = selector;
+   current_image = $sel.data('image-id');
+   $('#image-gallery-title').text($sel.data('title'));
+   $('#image-gallery-image').attr('src', $sel.data('image'));
+   disableButtons(counter, $sel.data('image-id'));
+ }
+
+ if (setIDs == true) {
+   $('[data-image-id]').each(function () {
+       counter++;
+       $(this).attr('data-image-id', counter);
+     });
+ }
+ $(setClickAttr).on('click', function () {
+     updateGallery($(this));
+   });
+}
+});
+
+ // build key actions
+ $(document).keydown(function (e) {
+     switch (e.which) {
+       case 37: // left
+         if ((modalId.data('bs.modal') || {})._isShown && $('#show-previous-image').is(":visible")) {
+           $('#show-previous-image').click();
+         }
+         break;
+
+       case 39: // right
+         if ((modalId.data('bs.modal') || {})._isShown && $('#show-next-image').is(":visible")) {
+           $('#show-next-image').click();
+         }
+         break;
+
+       default:
+         return; // exit this handler for other keys
+     }
+     e.preventDefault(); // prevent the default action (scroll / move caret)
+   });
+</script> -->
 {% endblock extra_js %}
