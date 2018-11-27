@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_beat',
-    'sorl.thumbnail',
     'dashboard.apps.DashboardConfig',
 ]
 
