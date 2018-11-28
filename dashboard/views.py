@@ -29,12 +29,12 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto, Press
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
     PasswordResetEmailForm, UserEditForm,
     ImageForm, ImageAlbumForm, SiteContentForm,
-    EventDataForm, EventPhotoForm
+    EventDataForm, EventPhotoForm, PressForm
 )
 
 
@@ -405,8 +405,8 @@ class Upcoming_Eventdata(CreateView):
                 ev_obj.created = context.get('created')
                 ev_obj.name = context.get('name')
                 ev_obj.created_id = context.get('id')
-                ev_obj.event_datetime = datetime.datetime.combine(date_feild, time_feild)
                 ev_obj.status = context.get('status')
+                ev_obj.event_datetime = datetime.datetime.combine(date_feild, time_feild)
                 ev_obj.updated = context.get('updated')
                 ev_obj.updated_date = up_date
                 ev_obj.venue_name = context.get('venue', {}).get('name', "")
@@ -418,6 +418,12 @@ class Upcoming_Eventdata(CreateView):
                 ev_obj.description = context.get('description')
                 ev_obj.save()
             message = "data created sucessfully"
+            if ev_obj.event_datetime.replace(tzinfo=timezone.utc)<datetime.datetime.today().replace(tzinfo=timezone.utc):
+                EventData.objects.Update(status="past")
+                print("hai")
+            else:
+                print("hgv",ev_obj.event_datetime.replace(tzinfo=timezone.utc))
+                print("uhjgbuh",datetime.datetime.today().replace(tzinfo=timezone.utc))
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 
@@ -560,3 +566,32 @@ class EventPhotoData(CreateView):
 #             error = "please enter event name to search"
 
 #         return render(request,'eventphotos_list.html',{'error':error})
+
+
+
+
+
+class PressCreateView(CreateView):
+    model = Press
+    template_name = 'press_create.html'
+    form_class = PressForm
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        press = Press.objects.create(
+            title=form.cleaned_data.get('title'),
+            press_description=form.cleaned_data.get('press_description'),
+            press_photos=form.cleaned_data.get('press_photos'))
+        press.save()
+        return redirect('presslist')
+
+
+class PressList(ListView):
+    model = Press
+    template_name = 'press_list.html'
+    success_url = reverse_lazy('dashboard')
+    context_object_name = 'presslist'
+
+    

@@ -153,6 +153,7 @@ class EventData(models.Model):
     def get_photos(self):
         return EventPhoto.objects.filter(event=self)
 
+
 class EventPhoto(models.Model):
     event = models.ForeignKey(EventData,on_delete=models.CASCADE)
     highres_link = models.URLField(max_length=500)
@@ -161,6 +162,13 @@ class EventPhoto(models.Model):
     photo_id = models.CharField(max_length=255)
 
     def __str__(self):
-        return photo_id
+        return self.photo_id
     
 
+class Press(models.Model):
+    title = models.CharField(max_length=255)
+    press_description = models.TextField(null=True, blank=True)
+    press_photos = models.ImageField(blank=True, upload_to='media/photos/')
+
+    def __str__(self):
+        return self.title 

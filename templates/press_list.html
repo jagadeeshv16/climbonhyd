@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container" id="tourpackages-carousel">
+      <div class="row">
+        {%for i in presslist%}
+        <div class="col-xs-18 col-sm-6 col-md-3">
+          <div class="thumbnail thumbnail_dis">
+            <img src="{{i.press_photos.url}}" alt="">
+              <div class="caption">
+                <h4>{{i.title}}</h4>
+            </div>
+          </div>
+        </div>
+        {%endfor%}
+
+   	</div><!-- End row -->
+      
+</div><!-- End container -->
+
+
+{% endblock %}
+
+
+
+
+
+<div class="container">
+	<div class="row">
+		<h4>Press List</h4>
+	</div>
+    <hr>
+            <div class="row row-margin-bottom">
+            {%for i in presslist%}
+            <div class="col-md-5 no-padding lib-item" data-category="view">
+                <div class="lib-panel">
+                    <div class="row box-shadow">
+                        <div class="col-md-6">
+                            <img class="lib-img-show" src="{{i.press_photos.url}}">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="lib-row lib-header">
+                                {{i.title}}
+                                <div class="lib-header-seperator"></div>
+                            </div>
+                            <div class="lib-row lib-desc">
+                                {{i.press_description}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            {%endfor%}
+     </div>
+</div>

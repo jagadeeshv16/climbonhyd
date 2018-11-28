@@ -26,8 +26,9 @@
                             {% if request.user.is_authenticated %}
                             <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'dashboard' %}">Dashboard</a></li>
                         <li class="dropdown nav-item mx-0 mx-lg-1">
-                            <a href="#" class="dropdown-toggle nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" data-toggle="dropdown">Profile <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-user"></span></a>
+                            <a href="#" class="dropdown-toggle nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" data-toggle="dropdown"><span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon "><i class="fas fa-user-circle"></i></span></a>
                             <ul class="dropdown-menu forAnimate" role="menu">
+                                <li>{{request.user}}</li>
                                 <li><a href="{% url 'profile_edit' %}">Profile</a></li>
                                 <li><a href="{% url 'eventslist' %}?status=upcoming">Events</a></li>
                                 <li><a href="{% url 'sitecontent_list' %}">SiteContentlist</a></li>
@@ -36,8 +37,11 @@
                             </ul>
                         </li>
                         {% else %}
-                        <li><a href="{% url 'login' %}">Login</a></li>
-                        <li><a href="{% url 'register' %}">Register</a></li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'login' %}">Login</a></li>
+                        <li class="nav-item mx-0 mx-lg-1">
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'register' %}">Register</a></li>
+                        
                         {% endif %}
                     </ul>
                 </div>
