@@ -69,9 +69,9 @@
           <img id="image-gallery-image" class="img-responsive col-md-12" src="">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary float-left" id="show-previous-image"><i class="fa fa-arrow-left"></i>
+          <button type="button" class=" float-left" id="show-previous-image"><i class="fa fa-arrow-left"></i>
           </button>
-          <button type="button" id="show-next-image" class="btn btn-secondary float-right"><i class="fa fa-arrow-right"></i>
+          <button type="button" id="show-next-image" class="float-right"><i class="fa fa-arrow-right"></i>
           </button>
         </div>
       </div>
@@ -79,25 +79,7 @@
   </div>
 </div>
 <br>
-<center>
-  <div class="loader navbar navbar-default navbar-fixed-bottom">
-  <div class="container">
-    <div class="row">
-      <div id="loader">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="lading"></div>
-      </div>
-    </div>
-    </div
-  </div>
-</center>
+<center><div class="loader"></div></center>
 {% if page_obj.has_next %}
 <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
 {% endif %}

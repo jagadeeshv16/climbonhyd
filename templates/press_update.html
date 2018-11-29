@@ -9,7 +9,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-4" for="id_title">Title*</label>
                 <div class="col-sm-4">
-                    <input type="text" name="{{form.title.html_name}}" id="{{ form.title.auto_id }}" placeholder="Name" class="form-control">
+                    <input type="text" name="{{form.title.html_name}}" id="{{ form.title.auto_id }}" placeholder="Name" class="form-control" value="{{form.title.value}}">
                     <p>{{form.title.errors}}</p>
                 </div>
             </div>
@@ -21,11 +21,12 @@
                     {{form.active.errors}}
                 </div>
             </div>
+            
             <br><br>
             <div class="form-group">
                 <label class="control-label col-sm-4" for="id_press_description">Description</label>
                 <div class="col-sm-9 col-md-6 col-lg-8">
-                    <textarea type="content" name="{{form.press_description.html_name}}" id="{{ form.press_description.auto_id }}" placeholder="text here...." class="form-control"></textarea>
+                    <textarea type="content" name="{{form.press_description.html_name}}" id="{{ form.press_description.auto_id }}" placeholder="text here...." class="form-control">{{form.press_description.value}}</textarea>
                     <p>{{form.press_description.errors}}</p>
                 </div>
             </div><br><br>
@@ -34,6 +35,7 @@
                 <label class="control-label col-sm-3" for="id_press_photos">Photos*</label>
                 <div class="col-sm-2">
                     <input type="file" name="{{form.press_photos.html_name}}" id="{{ form.press_photos.auto_id }}" placeholder="link" accept="image/*" class="form-control">
+                    {% if form.instance.press_photos.url %}<img src="{{ form.instance.press_photos.url}}" width="100" height="100">{%else%}<img src="https://maxcdn.icons8.com/app/uploads/2016/10/person_1.png" width="100" height="100">{%endif%}
                     {{form.press_photos.errors}}
                 </div>
                 <br><br><br>

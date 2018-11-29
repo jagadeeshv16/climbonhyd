@@ -66,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     bloodgroup = models.CharField(max_length=30, blank=True)
     contact = models.CharField(max_length=20,null=True, blank=True)
     emergency_contact_no = models.CharField(max_length=20,null=True, blank=True)
-    photo = models.ImageField(null=True, blank=True, upload_to='media/photos/')
+    photo = models.ImageField(upload_to='media/photos/')
     About = models.CharField(max_length=2000, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
@@ -99,7 +99,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Image(models.Model):
 
     title = models.CharField(max_length=20, null=True, blank=True)
-    photos = models.ImageField(blank=True, upload_to='media/photos/')
+    photos = models.ImageField(upload_to='media/photos/')
     
 
     def __str__(self):
@@ -168,7 +168,10 @@ class EventPhoto(models.Model):
 class Press(models.Model):
     title = models.CharField(max_length=255)
     press_description = models.TextField(null=True, blank=True)
-    press_photos = models.ImageField(blank=True, upload_to='media/photos/')
+    press_photos = models.ImageField(upload_to='media/photos/')
+    active = models.BooleanField(_('active'), default=False)
+
+
 
     def __str__(self):
         return self.title 

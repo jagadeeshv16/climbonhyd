@@ -97,6 +97,7 @@ class PressForm(forms.ModelForm):
 
     class Meta:
         model = Press
-        fields = ["title", "press_description", "press_photos"]
+        fields = ["title", "press_description", "active", "press_photos"]
+
 
        

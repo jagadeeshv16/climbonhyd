@@ -1,38 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
 <form method="POST">
-  {% csrf_token %}
-<div class="active-cyan active-cyan-2 mb-3">
-  <input class="form-control" type="text" placeholder="Search" aria-label="Search" name="event_name">
-  <p>{{error}}</p>
-</div>
+    {% csrf_token %}
+    <div class="active-cyan active-cyan-2 mb-3">
+        <input class="form-control" type="text" placeholder="Search" aria-label="Search" name="event_name">
+        <p>{{error}}</p>
+    </div>
 </form>
 <br><br><br>
 {% for item in eventphotos %}
 <dl>
-<dt><img src="{{item.highres_link}}" alt="Image" class="img-circle" width="200" height="200">
-    {{ item.event.name }}    
+    <dt><img src="{{item.highres_link}}" alt="Image" class="img-circle" width="200" height="200">
+    {{ item.event.name }}
   </dl>
-{% endfor %}
-
-<center>
-{% if is_paginated %}
-      <div class="pagination">
-          <span class="page-links">
+        {% endfor %}
+        <center>
+            {% if is_paginated %}
+            <div class="pagination">
+                <span class="page-links">
               {% if page_obj.has_previous %}
                   <a href="{{ request.path }}?status={{status}}&page={{ page_obj.previous_page_number }}">previous</a>
               {% endif %}
               <span class="page-current">
                   Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
               </span>
-              {% if page_obj.has_next %}
-                  <a href="{{ request.path }}?status={{status}}&page={{ page_obj.next_page_number }}">next</a>
-              {% endif %}
-          </span>
-      </div>
-    {% endif %}
-</center>
-{% endblock %}
-
-
-
+                {% if page_obj.has_next %}
+                <a href="{{ request.path }}?status={{status}}&page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+                </span>
+            </div>
+            {% endif %}
+        </center>
+        {% endblock %}

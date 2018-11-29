@@ -421,7 +421,9 @@ a:focus, a:hover, a:active {
 }
 /*loader*/
 
-
+.img-circle {
+    border-radius: 50%;
+}
 
 
  

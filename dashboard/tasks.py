@@ -46,6 +46,10 @@ def event_data():
             ev_obj.description = context.get('description')
             ev_obj.save()
         print("data created sucessfully")
+        event = EventData.objects.filter(status="upcoming")
+            for i in event:
+                if i.event_datetime.replace(tzinfo=timezone.utc)<datetime.datetime.today().replace(tzinfo=timezone.utc):
+                    EventData.objects.filter(name=i.name).update(status="past")
     else:
         print("your url page is not loaded")
 

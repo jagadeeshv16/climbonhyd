@@ -1,101 +1,88 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="col-md-16">
-<form class="form-inline" action='' id="register" method="POST" enctype="multipart/form-data">
-<fieldset>
-<div id="legend">
-<legend class="">Create New Account</legend>
-</div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-4" for="email">First Name</label>
-        <div class="col-sm-4">
-            <input type="text" name="{{form.first_name.html_name}}" id="{{ form.first_name.auto_id }}" placeholder="" class="form-control">
-            {{form.first_name.errors}}
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-4" for="email">Last Name</label>
-        <div class="col-sm-4">
-            <input type="text" name="{{form.last_name.html_name}}" id="{{ form.last_name.auto_id }}" placeholder="" class="form-control">
-            {{form.last_name.errors}}
-        </div>
-    </div><br><br>
-
-    <div class="form-group">
-        <label class="control-label col-sm-4" for="email">E-mail *</label>
-        <div class="col-sm-4">
-            <input type="text" name="{{form.email.html_name}}" id="{{ form.email.auto_id }}" placeholder="" class="form-control">
-            {{form.email.errors}}
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-4" for="password">Password *</label>
-        <div class="col-sm-4">
-            <input type="password" name="{{form.password.html_name}}" id="{{ form.password.auto_id }}" placeholder="" class="form-control">
-            {{form.password.errors}}
-        </div>
-    </div><br><br>
-
-    <div class="form-group">
-        <label class="control-label col-sm-3"  for="password_confirm">Password (Confirm)*</label>
-        <div class="col-sm-2">
-            <input type="password" name="{{form.confirm_password.html_name}}" id="{{ form.confirm_password.auto_id }}" placeholder="" class="form-control">
-            {{form.password_confirm.errors}}
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-3"  for="bloodgroup">Bloodgroup</label>
-        <div class="col-sm-2">
-            <input type="text" name="{{form.bloodgroup.html_name}}" id="{{ form.bloodgroup.auto_id }}" placeholder="" class="form-control">
-            {{form.bloodgroup.errors}}
-        </div>
-    </div><br><br>
-
-    <div class="form-group">
-        <label class="control-label col-sm-4"  for="contact">Contact*</label>
-        <div class="col-sm-2">
-            <input type="number" name="{{form.contact.html_name}}" id="{{ form.contact.auto_id }}" placeholder="" class="form-control">
-            {{form.contact.errors}}
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-3"  for="emergency_contact_no">Emergency Contact No*</label>
-        <div class="col-sm-2">
-            <input type="number" name="{{form.emergency_contact_no.html_name}}" id="{{ form.emergency_contact_no.auto_id }}" placeholder="" class="form-control">
-            {{form.emergency_contact_no.errors}}
-        </div>
-    </div><br><br>
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="photo">Photo*</label>
-        <div class="col-sm-1">
-            <input type="file" name="{{form.photo.html_name}}" id="{{ form.photo.auto_id }}" 
-            accept="image/*" placeholder="" class="form-control">
-            {{form.photo.errors}}
-        </div>
-    </div>
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="About">About</label>
-        <div class="col-sm-2">
-            <input type="text" name="{{form.About.html_name}}" id="{{ form.About.auto_id }}" placeholder="" maxlength="2000" class="form-control">
-            {{form.About.errors}}
-        </div>
-    </div>
-<br><br><br>
-{% csrf_token %}
-<div class="form-group col-sm-4 text-center">
-    <button class="btn btn-success" type="submit">Register</button>
-    <input class="btn btn-success" type="reset" value="Reset">
-</div>
-</fieldset>
-</form>
+    <form class="form-inline" action='' id="register" method="POST" enctype="multipart/form-data">
+        <fieldset>
+            <div id="legend">
+                <legend class="">Create New Account</legend>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="email">First Name</label>
+                <div class="col-sm-4">
+                    <input type="text" name="{{form.first_name.html_name}}" id="{{ form.first_name.auto_id }}" placeholder="" class="form-control">
+                    {{form.first_name.errors}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="email">Last Name</label>
+                <div class="col-sm-4">
+                    <input type="text" name="{{form.last_name.html_name}}" id="{{ form.last_name.auto_id }}" placeholder="" class="form-control">
+                    {{form.last_name.errors}}
+                </div>
+            </div><br><br>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="email">E-mail *</label>
+                <div class="col-sm-4">
+                    <input type="text" name="{{form.email.html_name}}" id="{{ form.email.auto_id }}" placeholder="" class="form-control">
+                    {{form.email.errors}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="password">Password *</label>
+                <div class="col-sm-4">
+                    <input type="password" name="{{form.password.html_name}}" id="{{ form.password.auto_id }}" placeholder="" class="form-control">
+                    {{form.password.errors}}
+                </div>
+            </div><br><br>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="password_confirm">Password (Confirm)*</label>
+                <div class="col-sm-2">
+                    <input type="password" name="{{form.confirm_password.html_name}}" id="{{ form.confirm_password.auto_id }}" placeholder="" class="form-control">
+                    {{form.password_confirm.errors}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="bloodgroup">Bloodgroup</label>
+                <div class="col-sm-2">
+                    <input type="text" name="{{form.bloodgroup.html_name}}" id="{{ form.bloodgroup.auto_id }}" placeholder="" class="form-control">
+                    {{form.bloodgroup.errors}}
+                </div>
+            </div><br><br>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="contact">Contact*</label>
+                <div class="col-sm-2">
+                    <input type="number" name="{{form.contact.html_name}}" id="{{ form.contact.auto_id }}" placeholder="" class="form-control">
+                    {{form.contact.errors}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="emergency_contact_no">Emergency Contact No*</label>
+                <div class="col-sm-2">
+                    <input type="number" name="{{form.emergency_contact_no.html_name}}" id="{{ form.emergency_contact_no.auto_id }}" placeholder="" class="form-control">
+                    {{form.emergency_contact_no.errors}}
+                </div>
+            </div><br><br>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="photo">Photo*</label>
+                <div class="col-sm-1">
+                    <input type="file" name="{{form.photo.html_name}}" id="{{ form.photo.auto_id }}" accept="image/*" placeholder="" class="form-control">
+                    {{form.photo.errors}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="About">About</label>
+                <div class="col-sm-2">
+                    <input type="text" name="{{form.About.html_name}}" id="{{ form.About.auto_id }}" placeholder="" maxlength="2000" class="form-control">
+                    {{form.About.errors}}
+                </div>
+            </div>
+            <br><br><br>
+            {% csrf_token %}
+            <div class="form-group col-sm-4 text-center">
+                <button class="btn btn-success bg-primary" type="submit">Register</button>
+                <input class="btn btn-success bg-primary" type="reset" value="Reset">
+            </div>
+        </fieldset>
+    </form>
 </div>
 {% endblock %}
-
-

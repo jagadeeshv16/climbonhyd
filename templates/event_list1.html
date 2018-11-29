@@ -1,3 +1,4 @@
+<div class="container" id="con">
 {% for item in eventsdata %}   
   <div class="row events_list " >
     <div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">
@@ -5,7 +6,6 @@
       <div class="panel panel-danger">
         <div class="panel-heading text-uppercase">{{item.name}}</div>
         <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|striptags}}</div>
-                  <div class="container">
                     <div class="row">
                       {%for i in item.get_photos %}
                       <div class="model{{forloop.counter}}{{page_obj.number}}">
@@ -17,36 +17,19 @@
                         </div>
                       {%endfor%}
                     </div>
-                  </div>
                   
         <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
         </div>
     </div>
   </div>
-  </div> 
+  </div>
+  </div>
+
   {% endfor %}
 
 
 
-</div><br>
-<center><div class="loader navbar navbar-default navbar-fixed-bottom">
-<center><div class="loader ">
-<div class="container">
-  <div class="row">
-    <div id="loader">
-        <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="lading"></div>
-    </div>
-  </div>
-</div</div></center>
-
+<center><div class="loader"></div></center>
 {% if page_obj.has_next %}
     <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
 {% endif %}

@@ -239,7 +239,8 @@ def staff_edit(request, id):
     user = User.objects.get(id=id)
     if request.method == "GET":
         form = UserEditForm(instance=user)
-        return render(request,'staffedit.html', {'form':form})
+        image = "https://maxcdn.icons8.com/app/uploads/2016/10/person_1.png"
+        return render(request,'staffedit.html', {'form':form, 'image':image})
 
     if request.method == "POST":
         form = UserEditForm(request.POST, request.FILES, instance=user)
@@ -418,12 +419,8 @@ class Upcoming_Eventdata(CreateView):
                 ev_obj.description = context.get('description')
                 ev_obj.save()
             message = "data created sucessfully"
-            if ev_obj.event_datetime.replace(tzinfo=timezone.utc)<datetime.datetime.today().replace(tzinfo=timezone.utc):
-                EventData.objects.Update(status="past")
-                print("hai")
-            else:
-                print("hgv",ev_obj.event_datetime.replace(tzinfo=timezone.utc))
-                print("uhjgbuh",datetime.datetime.today().replace(tzinfo=timezone.utc))
+            event = EventData.objects.filter(status="upcoming", event_datetime__gte=datetime.datetime.today().replace(tzinfo=timezone.utc))
+            EventData.objects.filter(name=event.name).update(status="past")
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 
@@ -481,6 +478,7 @@ class EventDataList(ListView):
     template_name = 'events_list.html'
     success_url = reverse_lazy('dashboard')
     paginate_by = 10
+    # queryset = EventData.objects.order_by('event_datetime')
     context_object_name = 'eventsdata'
 
     def get_queryset(self):
@@ -569,8 +567,6 @@ class EventPhotoData(CreateView):
 
 
 
-
-
 class PressCreateView(CreateView):
     model = Press
     template_name = 'press_create.html'
@@ -580,11 +576,11 @@ class PressCreateView(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        press = Press.objects.create(
-            title=form.cleaned_data.get('title'),
-            press_description=form.cleaned_data.get('press_description'),
-            press_photos=form.cleaned_data.get('press_photos'))
-        press.save()
+        profile = form.save(commit=False) 
+        press_photos = form.cleaned_data['press_photos']
+        press_description=form.cleaned_data['press_description']
+        title=form.cleaned_data['title'],
+        profile.save()
         return redirect('presslist')
 
 
@@ -594,4 +590,34 @@ class PressList(ListView):
     success_url = reverse_lazy('dashboard')
     context_object_name = 'presslist'
 
+class PressUpdateview(LoginRequiredMixin, UpdateView):
+    model = Press
+    template_name = 'press_update.html'
+    form_class = PressForm
+    pk_url_kwarg = 'pk'
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        profile = form.save(commit=False) 
+        press_photos = form.cleaned_data['press_photos']
+        press_description=form.cleaned_data['press_description']
+        title = form.cleaned_data['title']
+        active = form.cleaned_data['active']
+        profile.save()
+        return redirect('presslist')
+
     
+class PressDetele(LoginRequiredMixin, DeleteView):
+    model = Press
+    pk_url_kwarg = 'pk'
+    reverse_lazy = 'press_list'
+
+    def dispatch(self, *args, **kwargs):
+        return super(PressDetele,self).dispatch(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        title = Press.objects.get(pk=kwargs['pk'])
+        title = title.title
+        return render(request, 'staffdelete.html',{'user':title})
