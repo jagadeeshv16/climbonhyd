@@ -419,8 +419,9 @@ class Upcoming_Eventdata(CreateView):
                 ev_obj.description = context.get('description')
                 ev_obj.save()
             message = "data created sucessfully"
-            event = EventData.objects.filter(status="upcoming", event_datetime__gte=datetime.datetime.today().replace(tzinfo=timezone.utc))
-            EventData.objects.filter(name=event.name).update(status="past")
+            event = EventData.objects.filter(status="upcoming", event_datetime__lte=datetime.datetime.today().replace(tzinfo=timezone.utc))
+            for i in event:
+                EventData.objects.filter(name=i.name).update(status="past")
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 
