@@ -38,7 +38,9 @@ urlpatterns = [
     path('pressdata/', views.PressCreateView.as_view(), name='pressdata'),
     path('presslist/', views.PressList.as_view(), name='presslist'),
     path('updatepressdata/<int:pk>/',views.PressUpdateview.as_view(), name='press_update'),
-    path('pressdelete/<int:pk>/', views.PressDetele.as_view(), name='delete_press')
+    path('pressdelete/<int:pk>/', views.PressDetele.as_view(), name='delete_press'),
+    path('ins/', views.Insta_photos.as_view(), name="ins" ),
+    path('photoslist/', views.PhotosList.as_view(), name="photoslist")
 
 ]
 

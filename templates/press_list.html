@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="legend">
-    <legend class="">Press List</legend>
+    <legend class="">Press List
+     <a href="{% url "pressdata" %}">Add</a></legend>
 </div>
-
 {%for i in presslist%}
-    <div class="gallery">
-  <a target="_blank" href="{{i.press_photos.url}}">
-    <img src="{{i.press_photos.url}}" alt="{{i.title}}" width="600" height="400">
-  </a>
-  <div class="desc text-uppercase">{{i.title}}</div>
-  <div></div>
+<div class="press_container">
+        <div class="item tm{{forloop.counter}}">
+            <img class="image_press" src="{{i.press_photos.url}}" alt="{{i.title}}">
+            <p class="title">{{i.title}}</p>
+        </div>
 </div>
 {%endfor%}
-   
 {% endblock %}
+
+

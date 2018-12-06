@@ -172,6 +172,22 @@ class Press(models.Model):
     active = models.BooleanField(_('active'), default=False)
 
 
-
     def __str__(self):
         return self.title 
+
+class Photos(models.Model):
+    shortcode = models.CharField(max_length=1000)
+    title = models.CharField(max_length=1000)
+    html = models.TextField()
+    thumbnail_url = models.URLField(max_length=1000)
+
+    def __str__(self):
+        return self.title
+
+    def get_html(self):
+        # return self.html.replace("b'","").replace("\\","").replace("n'","")
+        return self.html.encode().decode("unicode_escape").replace("b'","").replace("\'","").replace("\\n","")
+
+    def get_image(self):
+        shortcode="https://www.instagram.com/p/"+self.shortcode+"/media/?size=m"
+        return shortcode

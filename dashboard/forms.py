@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordResetForm, AuthenticationForm
 
-from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto, Press
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto, Press, Photos
 
 
 class RegisterForm(forms.ModelForm):
@@ -99,5 +99,9 @@ class PressForm(forms.ModelForm):
         model = Press
         fields = ["title", "press_description", "active", "press_photos"]
 
+class PhotosForm(forms.ModelForm):
+    # html = forms.CharField(widget=forms.Textarea)
 
-       
+    class Meta:
+        model = Photos
+        fields = ["title", "html", "thumbnail_url", "shortcode"]

@@ -1,41 +1,47 @@
-
-
-
-.events_list .panel{
- padding: 10px;
- border-radius: 8px
-
+.events_list .panel {
+    padding: 10px;
+    border-radius: 8px
 }
-.searchbar{
+
+.searchbar {
     padding-top: 20px;
 }
-
+.panel-body{
+    overflow: hidden
+}
 .panel-danger>.panel-heading {
     color: #da1591;
     background-color: #54474700;
     border-color: #63464a;
+    
 }
 
-.thumbnail {margin-bottom:6px;}
-
-.carousel-control.left,.carousel-control.right{
-  background-image:none;
-  margin-top:10%;
-  width:5%;
+.thumbnail {
+    margin-bottom: 6px;
 }
 
-.btn:focus, .btn:active, button:focus, button:active {
-  outline: none !important;
-  box-shadow: none !important;
+.carousel-control.left,
+.carousel-control.right {
+    background-image: none;
+    margin-top: 10%;
+    width: 5%;
 }
 
-#image-gallery .modal-footer{
-  display: block;
+.btn:focus,
+.btn:active,
+button:focus,
+button:active {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
-.thumb{
-  margin-top: 15px;
-  margin-bottom: 15px;
+#image-gallery .modal-footer {
+    display: block;
+}
+
+.thumb {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 
@@ -43,32 +49,43 @@
 
 /*loader*/
 .loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid blue;
-  border-right: 16px solid green;
-  border-bottom: 16px solid red;
-  border-left: 16px solid pink;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    border-right: 16px solid green;
+    border-bottom: 16px solid red;
+    border-left: 16px solid pink;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
 /*loader*/
 
 /*presslist*/
 
-div.gallery {
+/*div.gallery {
     margin: 5px;
     border: 1px solid #ccc;
     float: left;
@@ -87,8 +104,94 @@ div.gallery img {
 div.desc {
     padding: 15px;
     text-align: center;
-}
+}*/
+@import url('https://fonts.googleapis.com/css?family=Amiri|Aref+Ruqaa|Cairo|Changa|El+Messiri|Harmattan|Jomhuria|Lateef|Mirza|Rakkas|Lato|Source+Sans+Pro|Ubuntu');
+
+    /* *{transition: 0.3s linear; padding:0;margin:0;} */
+    
+    .press_container {
+        margin: 3em auto;
+        width: 90%;
+        text-align: center;
+        /*  font-family: 'Aref Ruqaa', serif; */
+        font-family: 'Ubuntu', sans-serif;
+        /* font-family: 'Lato', sans-serif; */
+        font-family: 'Source Sans Pro', sans-serif;
+
+
+    }
+
+    .item {
+        /*  background: #FFF; */
+        margin: 2em;
+        display: inline-block;
+        width: 200px;
+        height: 200px;
+        border-radius: 20px;
+        transform: rotate(45deg);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+        padding: 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        margin: 0 auto;
+    }
+
+    .item .title {
+        position: absolute;
+        transform: rotate(-45deg);
+        top: 30%;
+        left: -20%;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px 20px;
+        width: 130%;
+        text-align: center;
+        color: #fff;
+        transition: all 0.3s ease-in-out;
+
+    }
+
+    .item:hover {
+        transform: none;
+        transform: scale(1.5);
+        z-index: 2;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    }
+
+    .item:hover>p {
+        transform: none;
+        top: 0;
+
+    }
+
+
+    .image_press {
+        width: 100%;
+        height: 100%;
+        transition: 0.3s linear;
+        transform: rotate(-45deg) scale(1.4)
+    }
+
+    .item:hover>.image_press {
+        transform: none;
+
+    }
+
+    .title.ar {
+        font-family: 'Rakkas', cursive;
+        font-size: 1.1em;
+
+    }
+
 /*presslist*/
 
+/*photos*/
+.main{
+    justify-content: center;
 
+}
 
+.instagram-media .instagram-media-rendered{
+    margin: 0px auto!important;
+}
+/*photos*/

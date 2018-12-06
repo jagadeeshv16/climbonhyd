@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" id="con">
+{%for i in details%}
+<div class="block">
+    <div class="middle">
+        <!--<center>{{i.get_html|safe}}</center>-->
+        <img src="{{i.get_image}}">
+    </div>
+    {%endfor%}
+</div>
+</div>
+<center><div class="loader"></div></center>
+{% if page_obj.has_next %}
+<a class="infinite-more-link" id="load_events" href="{{ request.path }}?page={{ page_obj.next_page_number }}"></a>
+{% endif %}
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% block extra_js %}
+<script type="text/javascript">
+  var processScroll = true;
+  var timeout;
+  $(window).scroll(function() {
+  clearTimeout(timeout);  
+  
+  timeout = setTimeout(function() {
+    if (processScroll  && $(window).scrollTop() > $(document).height() - $(window).height() -300) {
+        $('.loader').hide();
+        var events_url = $("#load_events").attr('href')
+        $.get(events_url, function(data,status){
+        if (events_url==undefined){
+          processScroll = false;
+          $('.loader').hide();
+        }else{
+          processScroll = true; 
+        $("#load_events").remove()
+        $("#con").append(data)
+        }              
+    });
+    }
+  },1000);
+  });
+</script>
+{% endblock extra_js %}

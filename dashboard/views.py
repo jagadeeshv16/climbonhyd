@@ -10,6 +10,8 @@ from django.shortcuts import render,HttpResponse,redirect,get_object_or_404,Http
 from django.urls import reverse_lazy,reverse
 from django.utils.http import is_safe_url
 from django.http import JsonResponse, HttpResponseRedirect
+from selenium import webdriver
+from pyvirtualdisplay import Display
 from django.views import View
 from django.shortcuts import resolve_url
 from django.contrib.sites.shortcuts import get_current_site
@@ -29,12 +31,13 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto, Press
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto, Press, Photos
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
     PasswordResetEmailForm, UserEditForm,
     ImageForm, ImageAlbumForm, SiteContentForm,
-    EventDataForm, EventPhotoForm, PressForm
+    EventDataForm, EventPhotoForm, PressForm,
+    PhotosForm
 )
 
 
@@ -479,7 +482,7 @@ class EventDataList(ListView):
     template_name = 'events_list.html'
     success_url = reverse_lazy('dashboard')
     paginate_by = 10
-    # queryset = EventData.objects.order_by('event_datetime')
+    queryset = EventData.objects.order_by('event_datetime')
     context_object_name = 'eventsdata'
 
     def get_queryset(self):
@@ -504,6 +507,7 @@ class EventDataList(ListView):
             return self.template_name
         if int(page) >= 2:
             return 'event_list1.html'
+
 
 class EventPhotoData(CreateView):
     model = EventPhoto
@@ -591,6 +595,7 @@ class PressList(ListView):
     success_url = reverse_lazy('dashboard')
     context_object_name = 'presslist'
 
+
 class PressUpdateview(LoginRequiredMixin, UpdateView):
     model = Press
     template_name = 'press_update.html'
@@ -622,3 +627,87 @@ class PressDetele(LoginRequiredMixin, DeleteView):
         title = Press.objects.get(pk=kwargs['pk'])
         title = title.title
         return render(request, 'staffdelete.html',{'user':title})
+
+
+class Insta_photos(CreateView):
+    model = Photos
+    form = PhotosForm
+    template_name = 'eventdata.html'
+    def get(self, request, *args, **kwargs):
+        display = Display(visible=0, size=(1366, 768))
+        display.start()
+        driver = webdriver.Firefox()
+        driver.get("https://www.instagram.com/climbon_hyderabad/")
+        time.sleep(2)
+        url = []
+        lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        shortcode = driver.find_elements_by_class_name("FyNDV")
+        time.sleep(2)
+        for i in shortcode:
+            ele = i.find_elements_by_css_selector('a')
+            for j in ele:
+                lis = j.get_attribute('href')
+                url.append(lis)
+                # print (j.get_attribute('href'))
+        match = False
+        while(match==False):
+            last = lenOfPage
+            lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+            time.sleep(2)
+            if last != lenOfPage:
+                shortcode = driver.find_elements_by_class_name("FyNDV")
+                time.sleep(2)
+                for i in shortcode:
+                    ele = i.find_elements_by_css_selector('a')
+                    for j in ele:
+                        lis = j.get_attribute('href')
+                        url.append(lis)
+                        # print (j.get_attribute('href'))
+            else:
+                match = True
+                
+        # print(url,len(url),len(set(url)))
+        total = list(set(url))
+        main = []
+        # print(total,len(set(url)))
+        for l in total:
+            team = "https://api.instagram.com/oembed/?url="+l
+            main.append(team)
+        print(len(main))
+        display.stop()
+
+        for i in main:
+            url = requests.get(i)
+            if url.status_code == 200:
+                events = url.json()
+                k = i.strip('/')
+                code = k.rsplit('/',1)[1]
+                title = events.get('title').encode('unicode-escape')
+                html = events.get('html').encode('unicode-escape')
+                if Photos.objects.filter(shortcode=code).exists():
+                    message = "data already exists"
+                else:
+                    event_photos, created = Photos.objects.get_or_create(
+                        shortcode=code,
+                        title=title, html=html,
+                        thumbnail_url=events.get('thumbnail_url'))
+                    message = "data created"
+        
+        return render(request, 'eventdata.html', {'message':message})
+
+class PhotosList(ListView):
+    model = Photos
+    template_name = 'photos_list.html'
+    success_url = reverse_lazy('dashboard')
+    # paginate_by = 10
+    context_object_name = 'details'
+
+    # def get_template_names(self):
+    #     page = self.request.GET.get('page')
+    #     if page == None or int(page) == 1:
+    #         return self.template_name
+    #     if int(page) >= 2:
+    #         return 'photos_list1.html'
+
+
+
