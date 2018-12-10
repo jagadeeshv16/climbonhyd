@@ -9367,3 +9367,76 @@ Gdk-Message: 10:07:48.245: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource
 
 Gdk-Message: 10:07:48.246: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1036.
 
+1544430431658	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.uzVI4fYAlLmj"
+1544430443899	Marionette	INFO	Listening on port 41021
+1544430443925	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+console.error: BroadcastService: 
+  receivedBroadcastMessage: handler for
+  remote-settings/monitor_changes
+  threw error:
+  Message: Error: Polling for changes failed: NetworkError when attempting to fetch resource..
+  Stack:
+    remoteSettingsFunction/remoteSettings.pollChanges@resource://services-settings/remote-settings.js:721:13
+
+Gdk-Message: 08:27:45.764: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 08:27:45.764: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 08:27:45.766: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 08:27:45.767: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+1544437651714	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.imJUYq61ObiU"
+1544437651719	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.uPGpMwr3GnLQ"
+1544437656772	Marionette	INFO	Listening on port 37633
+1544437656788	Marionette	INFO	Listening on port 41219
+1544437656850	Marionette	WARN	TLS certificate errors will be ignored for this session
+1544437656858	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+Gdk-Message: 10:27:47.995: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:27:47.996: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:27:47.996: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:27:48.000: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:27:48.000: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:27:48.001: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:27:48.011: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:27:48.021: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+1544437698499	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.XPT4hgcDC09v"
+1544437702295	Marionette	INFO	Listening on port 36013
+1544437702310	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+Gdk-Message: 10:28:40.666: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:28:40.666: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:28:40.667: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:28:40.668: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+1544437740157	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.ufZ965xn5EVt"
+1544437743495	Marionette	INFO	Listening on port 45991
+1544437743568	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/6a87432e9fbc.js, line 1: unreachable code after return statement
+Gdk-Message: 10:29:21.845: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:29:21.846: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:29:21.846: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:29:21.848: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+

@@ -1,90 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container" id="con">
+<div id="legend">
+    <legend class="">PhoTOs
+</div>
 {%for i in details%}
-<div class="block">
-    <div class="middle">
-        <!--<center>{{i.get_html|safe}}</center>-->
-        <img src="{{i.get_image}}">
-    </div>
-    {%endfor%}
+<div class="backdrop backdrop_photos"></div>
+<div class="modal modal_photos" id="modal{{forloop.counter0}}">
+    <div class="ele{{forloop.counter0}}">{{i.get_html|safe}}</div>
 </div>
-</div>
-<center><div class="loader"></div></center>
-{% if page_obj.has_next %}
-<a class="infinite-more-link" id="load_events" href="{{ request.path }}?page={{ page_obj.next_page_number }}"></a>
-{% endif %}
-
+{%endfor%}
+<main>
+    <div class="container">
+        <div class="row">
+            {%for i in details%}
+            <div class="trip-images  col-xs-6">
+                <img class="trip-image img-responsive image-color" src="{{i.get_image}}" >
+            </div>
+                {%endfor%}
+            </div>
+        </div>
+</main>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {% block extra_js %}
-<script type="text/javascript">
-  var processScroll = true;
-  var timeout;
-  $(window).scroll(function() {
-  clearTimeout(timeout);  
-  
-  timeout = setTimeout(function() {
-    if (processScroll  && $(window).scrollTop() > $(document).height() - $(window).height() -300) {
-        $('.loader').hide();
-        var events_url = $("#load_events").attr('href')
-        $.get(events_url, function(data,status){
-        if (events_url==undefined){
-          processScroll = false;
-          $('.loader').hide();
-        }else{
-          processScroll = true; 
-        $("#load_events").remove()
-        $("#con").append(data)
-        }              
-    });
-    }
-  },1000);
-  });
+<script>
+
+var imageSF = document.querySelectorAll('.trip-image');
+var backdrop = document.querySelector('.backdrop');
+var modal = document.querySelector('.modal');
+
+
+function openModal(count) {
+    var modal = document.getElementById('modal' + count);
+    backdrop.style.display = 'block';
+    modal.style.display = 'block';
+    console.log(count)
+}
+
+function closeModal(count) {
+    var modal = document.getElementById('modal' + count);
+    backdrop.style.display = 'none';
+    modal.style.display = 'none';
+}
+
+for (i = 0; i < imageSF.length; i++) {
+    imageSF[i].addEventListener('click', openModal.bind(null, i));
+    backdrop.addEventListener('click', closeModal.bind(null, i));
+}
+console.log(jQuery().jquery);
 </script>
 {% endblock extra_js %}

@@ -159,7 +159,11 @@ CELERY_BEAT_SCHEDULE = {
     'event-photo':{
         'task':'dashboard.tasks.event_photo',
         'schedule': crontab(minute=0, hour=6),
-    },                
+    },
+    'Insta-photos':{
+        'task':'dashboard.tasks.Insta_photos',
+        'schedule': crontab(minute=0, hour=6),
+    },                  
 
 }
 

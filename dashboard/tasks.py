@@ -47,11 +47,12 @@ def event_data():
             ev_obj.save()
         print("data created sucessfully")
         event = EventData.objects.filter(status="upcoming")
-            for i in event:
-                if i.event_datetime.replace(tzinfo=timezone.utc)<datetime.datetime.today().replace(tzinfo=timezone.utc):
-                    EventData.objects.filter(name=i.name).update(status="past")
+        for i in event:
+            if i.event_datetime.replace(tzinfo=timezone.utc)<datetime.datetime.today().replace(tzinfo=timezone.utc):
+                EventData.objects.filter(name=i.name).update(status="past")
     else:
         print("your url page is not loaded")
+
 
 @task
 def event_photo():
@@ -84,4 +85,64 @@ def event_photo():
                     print("data created sucessfully")
         else:
             print("your url is not found")
-            
+  
+        
+@task()
+def Insta_photos():
+    model = Photos
+    form = PhotosForm
+    template_name = 'eventdata.html'
+    display = Display(visible=0, size=(1366, 768))
+    display.start()
+    driver = webdriver.Firefox()
+    driver.get("https://www.instagram.com/climbon_hyderabad/")
+    time.sleep(2)
+    url = []
+    lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    shortcode = driver.find_elements_by_class_name("FyNDV")
+    time.sleep(2)
+    for i in shortcode:
+        ele = i.find_elements_by_css_selector('a')
+        for j in ele:
+            lis = j.get_attribute('href')
+            url.append(lis)
+    match = False
+    while(match==False):
+        last = lenOfPage
+        lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+        time.sleep(2)
+        if last != lenOfPage:
+            shortcode = driver.find_elements_by_class_name("FyNDV")
+            time.sleep(2)
+            for i in shortcode:
+                ele = i.find_elements_by_css_selector('a')
+                for j in ele:
+                    lis = j.get_attribute('href')
+                    url.append(lis)
+        else:
+            match = True
+                
+    total = list(set(url))
+    main = []
+    for l in total:
+        team = "https://api.instagram.com/oembed/?url="+l
+        main.append(team)
+    display.stop()
+
+    for i in main:
+        url = requests.get(i)
+        if url.status_code == 200:
+            events = url.json()
+            k = i.strip('/')
+            code = k.rsplit('/',1)[1]
+            title = events.get('title').encode('unicode-escape')
+            html = events.get('html').encode('unicode-escape')
+            if Photos.objects.filter(shortcode=code).exists():
+                print("data already exists")
+            else:
+                event_photos, created = Photos.objects.get_or_create(
+                    shortcode=code,
+                    title=title, html=html,
+                    thumbnail_url=events.get('thumbnail_url'))
+                print("data created")
+        
