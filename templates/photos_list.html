@@ -1,7 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-<div id="legend">
-    <legend class="">PhoTOs
+<div class="container-fluid">
+<div class="row justify-content-center">
+  <div class="col-sm-6">
+    <ul class="nav navbar-nav list-inline list-nav ">
+      <li class="">
+        <a href="{% url  'eventslist' %}?status=upcoming">
+          Upcoming
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'eventslist' %}?status=past">
+          Past
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'photoslist' %}">
+          Photos
+        </a>
+      </li>
+      <li><br>
+      </li>
+    </ul>
+  </div>
+  <div class="col-sm-6 text-right">
+    <div class="searchbar">
+      <form method="GET" >
+        <input type="text" placeholder="Search.." name="event_name">
+        <button type="submit"><i class="fas fa-search"></i></button></li>
+        <input class="hide" type="aria-hidden" name="status" value="{{status}}">
+          <h5>{{error}}</h5>
+      </form>
+    </div>
+  </div>  
 </div>
 {%for i in details%}
 <div class="backdrop backdrop_photos"></div>
@@ -30,6 +61,7 @@ var modal = document.querySelector('.modal');
 
 
 function openModal(count) {
+
     var modal = document.getElementById('modal' + count);
     backdrop.style.display = 'block';
     modal.style.display = 'block';
@@ -46,6 +78,5 @@ for (i = 0; i < imageSF.length; i++) {
     imageSF[i].addEventListener('click', openModal.bind(null, i));
     backdrop.addEventListener('click', closeModal.bind(null, i));
 }
-console.log(jQuery().jquery);
 </script>
 {% endblock extra_js %}

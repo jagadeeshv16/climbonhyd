@@ -1,16 +1,16 @@
 <div id="con">
 {% for item in eventsdata %}   
-  <div class="row events_list " >
+  <div class="row events_list justify-content-center" >
     <div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">
     <div class="col-sm-12" >
-      <div class="panel panel-danger">
-        <div class="panel-heading text-uppercase">{{item.name}}</div>
-        <div class="panel-body" ><h3>{{item.event_datetime}}<br>{{item.status}}</h3>{{item.description|truncatewords:20|striptags}}</div>
+      <div class=" card ">
+        <div class="card-header">{{item.name}}</div>
+        <div class="card-body" ><h3>{{item.event_datetime}}<br><span>{{item.status}}</span></h3>{{item.description|truncatewords:20|striptags}}</div>
                     <div class="row">
                       {%for i in item.get_photos %}
                       <div class="model{{forloop.counter}}{{page_obj.number}}">
                          <div class="col-lg-3 col-md-4 col-xs-6 thumb">
-                          <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="" data-image="{{i.highres_link}}" data-target="#image-gallery">
+                          <a class="thumbnail custom-thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="" data-image="{{i.highres_link}}" data-target="#image-gallery">
                            <img class="img-thumbnail" src="{{i.thumb_link}}" alt="Another alt text">
                           </a>
                         </div>
@@ -18,7 +18,7 @@
                       {%endfor%}
                     </div>
                   
-        <div class="panel-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
+        <div class="card-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....ViewMore</a></div>
         </div>
     </div>
   </div>
