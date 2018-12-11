@@ -44,7 +44,7 @@ body{
     text-transform: none;
 }
 .events_list .card .card-body h3{
-    font-size: 1.2rem;
+    font-size: 0.75rem;
 }
 .events_list .card .card-body h3 span{
     font-size: 0.9rem;
@@ -60,6 +60,9 @@ body{
     background-color: #fff;
     text-align: right;
 }
+.modal-body{
+    text-align: center;
+}
 
 .searchbar {
     padding-top: 20px;
@@ -72,6 +75,10 @@ body{
     background-color: #54474700;
     border-color: #63464a;
     
+}
+.img-responsive{
+    width: 300px;
+    height: auto;
 }
 
 .thumbnail {
@@ -259,6 +266,11 @@ div.desc {
 /*presslist*/
 
 /*photos*/
+.trip-images img{
+    vertical-align: middle;
+    border-style: inset;
+    padding-right: 1.5rem;
+}
 .image-color {
   filter: gray; 
   -webkit-filter: grayscale(1); 

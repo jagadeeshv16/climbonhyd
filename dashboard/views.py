@@ -673,7 +673,6 @@ class Insta_photos(CreateView):
         for l in total:
             team = "https://api.instagram.com/oembed/?url="+l
             main.append(team)
-        print(len(main))
         display.stop()
 
         for i in main:

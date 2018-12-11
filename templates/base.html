@@ -51,9 +51,9 @@
                     </li>
                     {% else %}
                     <li class="nav-item mx-0 mx-lg-1">
-                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'login' %}">Login</a></li>
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'eventslist' %}?status=upcoming">Events</a></li>
                     <li class="nav-item mx-0 mx-lg-1">
-                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'register' %}">Register</a></li>
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "presslist" %}">Press</a></li>
                     {% endif %}
                 </ul>
             </div>
