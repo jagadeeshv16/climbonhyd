@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordResetForm, AuthenticationForm
 
-from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto, Press, Photos
 
 
 class RegisterForm(forms.ModelForm):
@@ -49,6 +49,7 @@ class PasswordResetEmailForm(PasswordResetForm):
             raise ValidationError("Error: There is no user registered with the specified email address!")
         return email
 
+
 class UserEditForm(forms.ModelForm):
     """Staff Profile Edit Form """
 
@@ -63,6 +64,7 @@ class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ["title", "photos"]
+
 
 class ImageAlbumForm(forms.ModelForm):
 
@@ -86,3 +88,24 @@ class EventDataForm(forms.ModelForm):
                  "venue_address", "venue_city", "venue_country", "link", "Contact_Us", "description",
                  ]
 
+
+class EventPhotoForm(forms.ModelForm):
+
+    class Meta:
+        model = EventPhoto
+        fields = ["event", "highres_link", "photo_link", "thumb_link", "photo_id"]
+
+
+class PressForm(forms.ModelForm):
+
+    class Meta:
+        model = Press
+        fields = ["title", "press_description", "active", "press_photos"]
+
+
+class PhotosForm(forms.ModelForm):
+    # html = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = Photos
+        fields = ["title", "html", "thumbnail_url", "shortcode"]

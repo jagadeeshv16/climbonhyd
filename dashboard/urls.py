@@ -34,7 +34,13 @@ urlpatterns = [
     path('eventdata/',views.Upcoming_Eventdata.as_view(), name='eventdata'),
     path('pasteventsdata/',views.Past_Eventdata.as_view(), name='pastevents'),
     path('events/', views.EventDataList.as_view(), name='eventslist'),
-
+    path('eventphotos/', views.EventPhotoData.as_view(), name='eventphotos'),
+    path('pressdata/', views.PressCreateView.as_view(), name='pressdata'),
+    path('presslist/', views.PressList.as_view(), name='presslist'),
+    path('updatepressdata/<int:pk>/',views.PressUpdateview.as_view(), name='press_update'),
+    path('pressdelete/<int:pk>/', views.PressDetele.as_view(), name='delete_press'),
+    path('ins/', views.Insta_photos.as_view(), name="ins" ),
+    path('photoslist/', views.PhotosList.as_view(), name="photoslist")
 
 ]
 

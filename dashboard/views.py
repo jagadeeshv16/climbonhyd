@@ -10,6 +10,8 @@ from django.shortcuts import render,HttpResponse,redirect,get_object_or_404,Http
 from django.urls import reverse_lazy,reverse
 from django.utils.http import is_safe_url
 from django.http import JsonResponse, HttpResponseRedirect
+from selenium import webdriver
+from pyvirtualdisplay import Display
 from django.views import View
 from django.shortcuts import resolve_url
 from django.contrib.sites.shortcuts import get_current_site
@@ -29,12 +31,13 @@ from django.contrib.auth.views import (
 )
 
 # local imports
-from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData
+from dashboard.models import User, Image, ImageAlbum, SiteContent, EventData, EventPhoto, Press, Photos
 from dashboard.forms import (
     RegisterForm, LoginForm, ProfileForm,
     PasswordResetEmailForm, UserEditForm,
     ImageForm, ImageAlbumForm, SiteContentForm,
-    EventDataForm
+    EventDataForm, EventPhotoForm, PressForm,
+    PhotosForm
 )
 
 
@@ -153,6 +156,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
             return JsonResponse(data)
         return HttpResponseRedirect(self.get_success_url())
 
+
 class ForgotPassword(PasswordResetView):
     """form with email field to get reset password link
     """
@@ -238,7 +242,8 @@ def staff_edit(request, id):
     user = User.objects.get(id=id)
     if request.method == "GET":
         form = UserEditForm(instance=user)
-        return render(request,'staffedit.html', {'form':form})
+        image = "https://maxcdn.icons8.com/app/uploads/2016/10/person_1.png"
+        return render(request,'staffedit.html', {'form':form, 'image':image})
 
     if request.method == "POST":
         form = UserEditForm(request.POST, request.FILES, instance=user)
@@ -263,8 +268,6 @@ class StaffDelete(LoginRequiredMixin, DeleteView):
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk=kwargs['pk'])
         return render(request, 'staffdelete.html',{'user':user})
-
-
 
 
 class HomePage(TemplateView):
@@ -298,7 +301,6 @@ class SiteContentList(LoginRequiredMixin, ListView):
     paginate_orphans=1
     queryset = SiteContent.objects.order_by('index')
     context_object_name = 'sitelist'
-
 
     def get_ordering(self):
         return self.ordering
@@ -370,7 +372,6 @@ def down(request,id):
 class HomePage(TemplateView):
     template_name = 'frontend/index.html'
     
-
     def get_context_data(self, **kwargs):
         data = super(HomePage,self).get_context_data(**kwargs)
         data['sitelist'] = SiteContent.objects.filter(active=True).order_by('index')
@@ -382,7 +383,6 @@ class Upcoming_Eventdata(CreateView):
     form_class = EventDataForm
     template_name = 'eventdata.html'
     success_url = reverse_lazy('sitecontent_list')
-
 
     def get(self, request, *args, **kwargs):
         groupname = settings.GROUP_NAME
@@ -409,8 +409,8 @@ class Upcoming_Eventdata(CreateView):
                 ev_obj.created = context.get('created')
                 ev_obj.name = context.get('name')
                 ev_obj.created_id = context.get('id')
-                ev_obj.event_datetime = datetime.datetime.combine(date_feild, time_feild)
                 ev_obj.status = context.get('status')
+                ev_obj.event_datetime = datetime.datetime.combine(date_feild, time_feild)
                 ev_obj.updated = context.get('updated')
                 ev_obj.updated_date = up_date
                 ev_obj.venue_name = context.get('venue', {}).get('name', "")
@@ -422,6 +422,9 @@ class Upcoming_Eventdata(CreateView):
                 ev_obj.description = context.get('description')
                 ev_obj.save()
             message = "data created sucessfully"
+            event = EventData.objects.filter(status="upcoming", event_datetime__lte=datetime.datetime.today().replace(tzinfo=timezone.utc))
+            for i in event:
+                EventData.objects.filter(name=i.name).update(status="past")
         else:
             message = "your url page is not loaded"
         return render(request, 'eventdata.html',{'message':message}) 
@@ -484,26 +487,227 @@ class EventDataList(ListView):
     def get_queryset(self):
         events = EventData.objects.all()
         if self.request.GET.get('status') == "past":
-            return events.filter(status='past')
-        else:
-            return events.filter(status='upcoming')
+            events = events.filter(status='past').order_by('-event_datetime')
+        if self.request.GET.get('status') == "upcoming":
+            events = events.filter(status='upcoming').order_by('event_datetime')
+        if self.request.GET.get('event_name'):
+            events = events.filter(name__icontains=self.request.GET.get('event_name')).order_by('event_datetime')
+        return events
 
     def get_context_data(self, **kwargs):
         data = super(EventDataList,self).get_context_data(**kwargs)
         data['status'] = self.request.GET.get('status')
+        data['event_name'] = self.request.GET.get('event_name')
         return data
 
-    def post(self, request, *args, **kwargs):
-        event_name = request.POST.get("event_name")
-        if not event_name == "":
-            eventsdata = EventData.objects.filter(name__icontains=event_name)
-            if eventsdata.exists():
-                return render(request,'events_list.html',{'eventsdata':eventsdata})
-            else:
-                error = 'search results not found.............'
-                return render(request,'events_list.html',{'eventsdata':eventsdata,'error':error})
+    def get_template_names(self):
+        page = self.request.GET.get('page')
+        if page == None or int(page) == 1:
+            return self.template_name
+        if int(page) >= 2:
+            return 'event_list1.html'
+
+
+class EventPhotoData(CreateView):
+    model = EventPhoto
+    form_class = EventPhotoForm
+    template_name = 'eventdata.html'
+    success_url = reverse_lazy('sitecontent_list')
+
+    def get(self, request, *args, **kwargs):
+        groupname = settings.GROUP_NAME
+        key = settings.API_KEY
+        url = 'https://api.meetup.com/'+groupname+'/photo_albums?&sign=true&photo-host=public&key='+key
+        context = requests.get(url)
+        if context.status_code == 200:
+            events= context.json()
+            for context in events:
+                event_id = context.get('event', {}).get('id', "")
+                photo_id = context.get('id')
+                if EventPhoto.objects.filter(photo_id=photo_id).exists():
+                    message = "data created"
+                else:
+                    if EventData.objects.filter(created_id=event_id).exists():
+                        ph_data = EventPhoto()
+                        ph_data.event = EventData.objects.get(created_id=event_id)
+                        data = context.get('photo_sample')
+                        if data:
+                            for i in data:
+                                EventPhoto.objects.create(
+                                event = EventData.objects.get(created_id=event_id),
+                                highres_link = i['highres_link'],
+                                photo_link = i['photo_link'],
+                                thumb_link = i['thumb_link'],
+                                photo_id = context.get('id'))
+                        else:
+                            pass
+                    message = "data created sucessfully"
         else:
-            error = "please enter event name to search"
-            
-        return render(request,'events_list.html',{'error':error})
+            message = "your url is not found"
+        return render(request, 'eventdata.html',{'message':message}) 
+
+
+# class EventPhotoList(ListView):
+#     model = EventPhoto
+#     template_name = 'eventphotos_list.html'
+#     success_url = reverse_lazy('dashboard')
+#     paginate_by = 10
+#     context_object_name = 'eventphotos'
+
+
+#     def post(self, request, *args, **kwargs):
+#         event_name = request.POST.get("event_name")
+#         if not event_name == "":
+#             eventphotos = EventPhoto.objects.filter(event__name__icontains=event_name)
+#             if eventphotos.exists():
+#                 return render(request,'eventphotos_list.html',{'eventphotos':eventphotos})
+#             else:
+#                 error = 'search results not found.............'
+#                 return render(request,'eventphotos_list.html',{'eventphotos':eventphotos,'error':error})
+#         else:
+#             error = "please enter event name to search"
+
+#         return render(request,'eventphotos_list.html',{'error':error})
+
+
+
+class PressCreateView(CreateView):
+    model = Press
+    template_name = 'press_create.html'
+    form_class = PressForm
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        profile = form.save(commit=False) 
+        press_photos = form.cleaned_data['press_photos']
+        press_description=form.cleaned_data['press_description']
+        title=form.cleaned_data['title'],
+        profile.save()
+        return redirect('presslist')
+
+
+class PressList(ListView):
+    model = Press
+    template_name = 'press_list.html'
+    success_url = reverse_lazy('dashboard')
+    context_object_name = 'presslist'
+
+
+class PressUpdateview(LoginRequiredMixin, UpdateView):
+    model = Press
+    template_name = 'press_update.html'
+    form_class = PressForm
+    pk_url_kwarg = 'pk'
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        profile = form.save(commit=False) 
+        press_photos = form.cleaned_data['press_photos']
+        press_description=form.cleaned_data['press_description']
+        title = form.cleaned_data['title']
+        active = form.cleaned_data['active']
+        profile.save()
+        return redirect('presslist')
+
+    
+class PressDetele(LoginRequiredMixin, DeleteView):
+    model = Press
+    pk_url_kwarg = 'pk'
+    reverse_lazy = 'press_list'
+
+    def dispatch(self, *args, **kwargs):
+        return super(PressDetele,self).dispatch(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        title = Press.objects.get(pk=kwargs['pk'])
+        title = title.title
+        return render(request, 'staffdelete.html',{'user':title})
+
+
+class Insta_photos(CreateView):
+    model = Photos
+    form = PhotosForm
+    template_name = 'eventdata.html'
+    def get(self, request, *args, **kwargs):
+        display = Display(visible=0, size=(1366, 768))
+        display.start()
+        driver = webdriver.Firefox()
+        driver.get("https://www.instagram.com/climbon_hyderabad/")
+        time.sleep(2)
+        url = []
+        lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        shortcode = driver.find_elements_by_class_name("FyNDV")
+        time.sleep(2)
+        for i in shortcode:
+            ele = i.find_elements_by_css_selector('a')
+            for j in ele:
+                lis = j.get_attribute('href')
+                url.append(lis)
+                # print (j.get_attribute('href'))
+        match = False
+        while(match==False):
+            last = lenOfPage
+            lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+            time.sleep(2)
+            if last != lenOfPage:
+                shortcode = driver.find_elements_by_class_name("FyNDV")
+                time.sleep(2)
+                for i in shortcode:
+                    ele = i.find_elements_by_css_selector('a')
+                    for j in ele:
+                        lis = j.get_attribute('href')
+                        url.append(lis)
+                        # print (j.get_attribute('href'))
+            else:
+                match = True
+                
+        # print(url,len(url),len(set(url)))
+        total = list(set(url))
+        main = []
+        # print(total,len(set(url)))
+        for l in total:
+            team = "https://api.instagram.com/oembed/?url="+l
+            main.append(team)
+        display.stop()
+        driver.quit()
+
+        for i in main:
+            url = requests.get(i)
+            if url.status_code == 200:
+                events = url.json()
+                k = i.strip('/')
+                code = k.rsplit('/',1)[1]
+                title = events.get('title').encode('unicode-escape')
+                html = events.get('html').encode('unicode-escape')
+                if Photos.objects.filter(shortcode=code).exists():
+                    message = "data already exists"
+                else:
+                    event_photos, created = Photos.objects.get_or_create(
+                        shortcode=code,
+                        title=title, html=html,
+                        thumbnail_url=events.get('thumbnail_url'))
+                    message = "data created"
+        
+        return render(request, 'eventdata.html', {'message':message})
+
+
+class PhotosList(ListView):
+    model = Photos
+    template_name = 'photos_list.html'
+    success_url = reverse_lazy('dashboard')
+    # paginate_by = 10
+    context_object_name = 'details'
+
+    # def get_template_names(self):
+    #     page = self.request.GET.get('page')
+    #     if page == None or int(page) == 1:
+    #         return self.template_name
+    #     if int(page) >= 2:
+    #         return 'photos_list1.html'
+
+
 

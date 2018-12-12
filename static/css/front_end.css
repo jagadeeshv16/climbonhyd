@@ -411,3 +411,19 @@ a:focus, a:hover, a:active {
       display: none; 
     }
   }
+
+.invisible {
+  visibility: hidden;
+}
+
+.space {
+  tab-size: 4;
+}
+/*loader*/
+
+.img-circle {
+    border-radius: 50%;
+}
+
+
+ 

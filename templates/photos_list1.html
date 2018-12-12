@@ -1,0 +1,11 @@
+<html>
+<body>
+{%for i in details%}
+<div class="block">
+    <div class="middle">
+        <center>{{i.get_html|safe}}</center>
+    </div>
+    {%endfor%}
+</div>
+</body>
+</html>

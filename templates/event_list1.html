@@ -1,0 +1,37 @@
+<div id="con">
+{% for item in eventsdata %}   
+  <div class="row events_list justify-content-center" >
+    <div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">
+    <div class="col-sm-12" >
+      <div class=" card ">
+        <div class="card-header">{{item.name}}</div>
+        <div class="card-body" ><h3>{{item.event_datetime}}<br><span>{{item.status}}</span></h3>{{item.description|truncatewords:50|striptags}}</div>
+                    <div class="row">
+                      {%for i in item.get_photos %}
+                      <div class="model{{forloop.counter}}{{page_obj.number}}">
+                         <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                          <a class="thumbnail custom-thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="" data-image="{{i.highres_link}}" data-target="#image-gallery">
+                           <img class="img-thumbnail" src="{{i.thumb_link}}" alt="Another alt text">
+                          </a>
+                        </div>
+                        </div>
+                      {%endfor%}
+                    </div>
+                  
+        <div class="card-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}"target="_blank">....ViewMore</a></div>
+        </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  {% endfor %}
+
+
+
+<center><div class="loader"></div></center>
+{% if page_obj.has_next %}
+    <a class="infinite-more-link" id="load_events" href="{{ request.path }}?status={{status}}&event_name={% if event_name %}{{event_name}}{% endif %}&page={{ page_obj.next_page_number }}"></a>
+{% endif %}
+
+

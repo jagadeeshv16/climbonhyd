@@ -66,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     bloodgroup = models.CharField(max_length=30, blank=True)
     contact = models.CharField(max_length=20,null=True, blank=True)
     emergency_contact_no = models.CharField(max_length=20,null=True, blank=True)
-    photo = models.ImageField(null=True,blank=True,upload_to='media/photos/')
+    photo = models.ImageField(upload_to='media/photos/')
     About = models.CharField(max_length=2000, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
@@ -99,7 +99,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Image(models.Model):
 
     title = models.CharField(max_length=20, null=True, blank=True)
-    photos = models.ImageField(blank=True, upload_to='media/photos/')
+    photos = models.ImageField(upload_to='media/photos/')
     
 
     def __str__(self):
@@ -150,3 +150,44 @@ class EventData(models.Model):
     def __str__(self):
         return self.created_id 
 
+    def get_photos(self):
+        return EventPhoto.objects.filter(event=self)
+
+
+class EventPhoto(models.Model):
+    event = models.ForeignKey(EventData,on_delete=models.CASCADE)
+    highres_link = models.URLField(max_length=500)
+    photo_link = models.URLField(max_length=500)
+    thumb_link = models.URLField(max_length=500)
+    photo_id = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.photo_id
+    
+
+class Press(models.Model):
+    title = models.CharField(max_length=255)
+    press_description = models.TextField(null=True, blank=True)
+    press_photos = models.ImageField(upload_to='media/photos/')
+    active = models.BooleanField(_('active'), default=False)
+
+
+    def __str__(self):
+        return self.title 
+
+class Photos(models.Model):
+    shortcode = models.CharField(max_length=1000)
+    title = models.CharField(max_length=1000)
+    html = models.TextField()
+    thumbnail_url = models.URLField(max_length=1000)
+
+    def __str__(self):
+        return self.title
+
+    def get_html(self):
+        # return self.html.replace("b'","").replace("\\","").replace("n'","")
+        return self.html.encode().decode("unicode_escape").replace("b'","").replace("\'","").replace("\\n","")
+
+    def get_image(self):
+        shortcode="https://www.instagram.com/p/"+self.shortcode+"/media/?size=m"
+        return shortcode
