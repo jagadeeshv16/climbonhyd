@@ -482,17 +482,16 @@ class EventDataList(ListView):
     template_name = 'events_list.html'
     success_url = reverse_lazy('dashboard')
     paginate_by = 10
-    queryset = EventData.objects.order_by('event_datetime')
     context_object_name = 'eventsdata'
 
     def get_queryset(self):
         events = EventData.objects.all()
         if self.request.GET.get('status') == "past":
-            events = events.filter(status='past')
+            events = events.filter(status='past').order_by('-event_datetime')
         if self.request.GET.get('status') == "upcoming":
-            events = events.filter(status='upcoming')
+            events = events.filter(status='upcoming').order_by('event_datetime')
         if self.request.GET.get('event_name'):
-            events = events.filter(name__icontains=self.request.GET.get('event_name'))
+            events = events.filter(name__icontains=self.request.GET.get('event_name')).order_by('event_datetime')
         return events
 
     def get_context_data(self, **kwargs):
@@ -674,6 +673,7 @@ class Insta_photos(CreateView):
             team = "https://api.instagram.com/oembed/?url="+l
             main.append(team)
         display.stop()
+        driver.quit()
 
         for i in main:
             url = requests.get(i)
@@ -693,6 +693,7 @@ class Insta_photos(CreateView):
                     message = "data created"
         
         return render(request, 'eventdata.html', {'message':message})
+
 
 class PhotosList(ListView):
     model = Photos

@@ -128,6 +128,7 @@ def Insta_photos():
         team = "https://api.instagram.com/oembed/?url="+l
         main.append(team)
     display.stop()
+    driver.quit()
 
     for i in main:
         url = requests.get(i)

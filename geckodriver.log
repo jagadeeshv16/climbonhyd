@@ -9440,3 +9440,48 @@ Gdk-Message: 10:29:21.846: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource
 
 Gdk-Message: 10:29:21.848: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
 
+1544593130813	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.5fep617ZwZ50"
+1544593131660	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1544593131661	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1544593135930	Marionette	INFO	Listening on port 43163
+1544593136006	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/7adbbf90dd76.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/7adbbf90dd76.js, line 1: unreachable code after return statement
+Gdk-Message: 05:39:16.181: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 05:39:16.182: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 05:39:16.182: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 05:39:16.672: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+1544593175448	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.cF4S3kfHTQ3m"
+1544593176083	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1544593176084	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1544593179540	Marionette	INFO	Listening on port 40139
+1544593179577	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/7adbbf90dd76.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/7adbbf90dd76.js, line 1: unreachable code after return statement
+Gdk-Message: 05:39:58.081: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 05:39:58.082: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 05:39:58.084: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 05:39:58.085: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+1544610480720	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.zSWdO15dwE5i"
+1544610481333	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1544610481333	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1544610484853	Marionette	INFO	Listening on port 46153
+1544610484939	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/7adbbf90dd76.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.instagram.com/static/bundles/base/ConsumerCommons.js/7adbbf90dd76.js, line 1: unreachable code after return statement
+Gdk-Message: 10:28:23.897: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:28:23.899: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:28:23.899: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+
+Gdk-Message: 10:28:23.919: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1028.
+

@@ -30,6 +30,7 @@
         <button type="submit"><i class="fas fa-search"></i></button></li>
         <input class="hide" type="aria-hidden" name="status" value="{{status}}">
           <h5>{{error}}</h5>
+          {%if not eventsdata%}<h5>There is no matching text</h5>{%endif%}
       </form>
     </div>
   </div>  
@@ -43,7 +44,7 @@
           <div class="card-header">{{item.name}}</div>
           <div class=" card-body">
             <h3>{{item.event_datetime}}<br><span>{{item.status}}</span></h3>
-            {{item.description|truncatewords:20|striptags}}
+            {{item.description|truncatewords:50|striptags}}
           </div>
           <div >
             <div class="row">
@@ -56,7 +57,7 @@
               {%endfor%}
             </div>
           </div>
-          <div class="card-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}">....MoreDetails</a></div>
+          <div class="card-footer"><a href="https://www.meetup.com/Theclimbon/events/{{item.created_id}}" target="_blank">....MoreDetails</a></div>
         </div>
       </div>
     </div>
